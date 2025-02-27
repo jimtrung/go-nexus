@@ -1,26 +1,29 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
-
-	"github.com/gin-gonic/gin"
-	"github.com/jimtrung/go-nexus/templates/layout"
+	"github.com/jimtrung/go-nexus/internal/api"
+	"github.com/jimtrung/go-nexus/internal/infra/db"
+	"github.com/jimtrung/go-nexus/internal/infra/env"
+	"github.com/jimtrung/go-nexus/internal/infra/logger/zap"
 )
 
 func main() {
-    r := gin.Default()
+	logger := zap.NewLogger()
+	if err := env.SetupEnv(); err != nil {
+		logger.Error("Error setting up environment", err)
+		return
+	}
 
-    r.GET("/greet", func(ctx *gin.Context) {
-        ctx.JSON(http.StatusOK, gin.H{
-            "message": "Hello, World",
-        })
-    })
+	database := db.ConnectToDatabase()
+	defer db.CloseConnection(database)
+	server := api.NewServer("debug")
 
-    r.GET("/templ", func(ctx *gin.Context) {
-        layout.Base().Render(ctx, ctx.Writer)
-    })
+	port, err := env.GetPort()
+	if err != nil {
+		logger.Error("Error getting port from .env", err)
+		return
+	}
 
-    fmt.Println("Server is running on port 8080")
-    r.Run("127.0.0.1:8080")
+	// logger.Info("Server is running on port " + port)
+	server.StartServer(database, port)
 }
