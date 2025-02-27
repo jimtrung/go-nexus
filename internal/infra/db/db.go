@@ -1,28 +1,26 @@
 package db
 
 import (
-	"context"
 	"log"
 
-	"github.com/jackc/pgx/v5"
 	"github.com/jimtrung/go-nexus/internal/infra/env"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-func ConnectToDatabase() *pgx.Conn {
-    dbUrl, err := env.GetDBURL()
-    if err != nil {
-        log.Fatalf("Error getting database url: %s", err)
-    }
+var DB *gorm.DB
 
-    conn, err := pgx.Connect(context.Background(), dbUrl)
-    if err != nil {
-        log.Fatalf("Error connecting to database: %s", err)
-    }
+func ConnectToDatabase() *gorm.DB {
+	dbUrl, err := env.GetDBURL()
+	if err != nil {
+		log.Fatalf("Error getting database url: %s", err)
+	}
 
-    return conn
+	conn, err := gorm.Open(postgres.Open(dbUrl), &gorm.Config{})
+	if err != nil {
+		log.Fatalf("Error connecting to database: %s", err)
+	}
+    DB = conn
+
+	return conn
 }
-
-func CloseConnection(conn *pgx.Conn) {
-    conn.Close(context.Background())
-}
-

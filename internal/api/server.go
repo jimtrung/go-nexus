@@ -2,8 +2,8 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v5"
 	"github.com/jimtrung/go-nexus/internal/api/routes"
+	"gorm.io/gorm"
 )
 
 type Server struct {
@@ -16,7 +16,7 @@ func NewServer(mode string) *Server {
     return server
 }
 
-func (server *Server) setupRouter(database *pgx.Conn) {
+func (server *Server) setupRouter(database *gorm.DB) {
 	router := gin.Default()
     router.SetTrustedProxies([]string{"127.0.0.1"})
     routes := routes.Routes{Router: router, Database: database}
@@ -24,7 +24,7 @@ func (server *Server) setupRouter(database *pgx.Conn) {
     server.router = router
 }
 
-func (server *Server) StartServer(database *pgx.Conn, port string) error {
+func (server *Server) StartServer(database *gorm.DB, port string) error {
     address := "127.0.0.1:" + port
 	server.setupRouter(database)
 	return server.router.Run(address)

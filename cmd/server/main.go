@@ -15,7 +15,6 @@ func main() {
 	}
 
 	database := db.ConnectToDatabase()
-	defer db.CloseConnection(database)
 	server := api.NewServer("debug")
 
 	port, err := env.GetPort()

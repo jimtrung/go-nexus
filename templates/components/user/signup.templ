@@ -1,0 +1,14 @@
+package user
+
+import "github.com/jimtrung/go-nexus/templates/layout"
+
+templ Signup() {
+    @layout.Base("Sign Up") {
+        <form hx-post="/auth/signup" hx-trigger="submit">
+            Username: <input type="text" name="username" autocomplete="off">
+            Email: <input type="email" name="email" autocomplete="off">
+            Password: <input type="password" name="password" autocomplete="off">
+            <button type="submit">Sign Up</button>
+        </form>
+    }
+}
