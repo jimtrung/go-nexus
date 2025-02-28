@@ -12,3 +12,9 @@ func RenderSignupPage(c *gin.Context) {
         zap.NewLogger().Error("error", err.Error())
     }
 }
+
+func RenderLoginPage(c *gin.Context) {
+    if err := handlers.Render(c, user.Login()); err != nil {
+        zap.NewLogger().Error("error", err.Error())
+    }
+}

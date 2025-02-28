@@ -8,6 +8,7 @@ func SetupPagesRoutes(r *Routes) {
         user := p.Group("/user")
         {
             user.GET("/signup", pages.RenderSignupPage)
+            user.GET("/login", pages.RenderLoginPage)
         }
     }
 }

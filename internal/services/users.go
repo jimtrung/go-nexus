@@ -4,12 +4,12 @@ import (
 	"fmt"
 
 	"github.com/jimtrung/go-nexus/internal/domain/models"
+	"github.com/jimtrung/go-nexus/internal/infra/db"
 	"golang.org/x/crypto/bcrypt"
-	"gorm.io/gorm"
 )
 
-func InsertIntoUsers(conn *gorm.DB, user models.User) error {
-    result := conn.Create(&user)
+func InsertIntoUsers(user models.User) error {
+    result := db.DB.Create(&user)
 
     return result.Error
 }
@@ -21,4 +21,21 @@ func HashPassword(password string) (string, error) {
     }
 
     return string(hashed), nil
+}
+
+func IsValidUser(user models.User) error {
+    var res models.User
+
+    result := db.DB.Select("password").Where("username = ?", user.Username).Find(&res)
+    if result.Error != nil {
+        return result.Error
+    }
+
+    if err := bcrypt.CompareHashAndPassword(
+        []byte(res.Password), []byte(user.Password),
+    ); err != nil {
+        return err
+    }
+
+    return nil
 }

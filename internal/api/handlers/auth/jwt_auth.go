@@ -5,7 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jimtrung/go-nexus/internal/domain/models"
-	"github.com/jimtrung/go-nexus/internal/infra/db"
 	"github.com/jimtrung/go-nexus/internal/services"
 )
 
@@ -33,7 +32,7 @@ func Signup(c *gin.Context) {
 		Password: hashedPassword,
 	}
 
-    if err := services.InsertIntoUsers(db.DB, req); err != nil {
+    if err := services.InsertIntoUsers(req); err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{
             "error": err.Error(),
         })
@@ -54,10 +53,18 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	req := &models.LoginRequest{
+	req := models.User{
 		Username: username,
 		Password: password,
 	}
+
+    // Compare password
+    if err := services.IsValidUser(req); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "error": err.Error(),
+        })
+        return
+    }
 
     token, err := services.CreateSignedToken(username)
     if err != nil {
@@ -69,8 +76,9 @@ func Login(c *gin.Context) {
 
     c.SetSameSite(http.SameSiteLaxMode)
     c.SetCookie("Authorization", token, 3600 * 4, "/", "", false, true)
-
-	c.JSON(http.StatusOK, req)
+	c.JSON(http.StatusOK, gin.H{
+        "message": "Login successfully",
+    })
 }
 
 
