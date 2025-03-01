@@ -11,4 +11,6 @@ func SetupPagesRoutes(r *Routes) {
             user.GET("/login", pages.RenderLoginPage)
         }
     }
+
+    r.Router.Static("/static", "./static")
 }
