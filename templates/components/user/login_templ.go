@@ -43,13 +43,13 @@ func Login() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form hx-post=\"/auth/login\" hx-trigger=\"submit\">Username: <input type=\"text\" name=\"username\" autocomplete=\"off\"> Password: <input type=\"password\" name=\"password\" autocomplete=\"off\"> <button type=\"submit\">Sign Up</button></form>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"group flex justify-center items-center min-h-screen\n            bg-gray-100 text-gray-900 transition-colors duration-300\"><form hx-post=\"/auth/login\" hx-trigger=\"submit\" hx-target=\"#login-response\" hx-swap=\"innerHTML\" hx-ext=\"json-enc\" class=\"flex flex-col gap-4 p-6 bg-white shadow-lg rounded-lg\n                w-96\"><h2 class=\"text-2xl font-semibold text-center\">Log In</h2><label for=\"username\" class=\"font-medium\">Username</label> <input class=\"border border-gray-300 bg-gray-100 rounded-md px-3\n                    py-2 focus:outline-none focus:ring-2 focus:ring-blue-500\" type=\"text\" id=\"username\" name=\"username\" autocomplete=\"off\" required> <label for=\"password\" class=\"font-medium\">Password</label> <input class=\"border border-gray-300 bg-gray-100 rounded-md px-3\n                    py-2 focus:outline-none focus:ring-2 focus:ring-blue-500\" type=\"password\" id=\"password\" name=\"password\" autocomplete=\"off\" required><div id=\"login-response\"></div><button type=\"submit\" class=\"mt-4 bg-blue-600 text-white font-semibold py-2\n                    rounded-md hover:bg-blue-700 transition duration-200\">Log In</button></form></div><script>\n    document.body.addEventListener(\"htmx:afterRequest\", function (event) {\n        let responseDiv = document.querySelector(\"#login-response\");\n\n        if (!event.detail.successful) {\n            if (event.detail.xhr.status === 400 || event.detail.xhr.status === 500) {\n                let errorMessage = event.detail.xhr.responseText;\n                responseDiv.innerHTML = `<p class=\"text-red-500\">${errorMessage}</p>`;\n            } else {\n                responseDiv.innerHTML = `<p class=\"text-red-500\">An unexpected error occurred.</p>`;\n            }\n        } else {\n            let res = JSON.parse(event.detail.xhr.responseText);\n            responseDiv.innerHTML = `<p class=\"text-green-500\">${res.message}</p>`;\n        }\n    });\n</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = layout.Base("Sign Up").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = layout.Base("Log In").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

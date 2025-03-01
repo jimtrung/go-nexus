@@ -9,33 +9,19 @@ import (
 )
 
 func Signup(c *gin.Context) {
-	username, email, password := c.PostForm("username"), c.PostForm("email"), c.PostForm("password")
-	if username == "" || password == "" || email == "" {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Empty field",
-		})
-		return
-	}
-
-    // Hash the password
-    hashedPassword, err := services.HashPassword(password)
-    if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{
-            "error": err.Error(),
-        })
-        return
+    var req models.User
+    if err := c.Bind(&req); err != nil {
+        c.String(http.StatusInternalServerError, "Wrong JSON format")
     }
 
-	req := models.User{
-		Username: username,
-		Email:    email,
-		Password: hashedPassword,
-	}
+    hashedPassword, err := services.HashPassword(req.Password)
+    if err != nil {
+        c.String(http.StatusInternalServerError, err.Error())
+    }
+    req.Password = hashedPassword
 
     if err := services.InsertIntoUsers(req); err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{
-            "error": err.Error(),
-        })
+        c.String(http.StatusInternalServerError, err.Error())
         return
     }
 

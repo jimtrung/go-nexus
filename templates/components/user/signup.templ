@@ -3,12 +3,77 @@ package user
 import "github.com/jimtrung/go-nexus/templates/layout"
 
 templ Signup() {
-    @layout.Base("Sign Up") {
-        <form hx-post="/auth/signup" hx-trigger="submit">
-            Username: <input type="text" name="username" autocomplete="off">
-            Email: <input type="email" name="email" autocomplete="off">
-            Password: <input type="password" name="password" autocomplete="off">
-            <button type="submit">Sign Up</button>
-        </form>
-    }
+	@layout.Base("Sign Up") {
+		<div
+			class="group flex justify-center items-center min-h-screen
+            bg-gray-100 text-gray-900 transition-colors duration-300"
+		>
+			<form
+				hx-post="/auth/signup"
+				hx-trigger="submit"
+				hx-target="#signup-response"
+				hx-swap="innerHTML"
+				hx-ext="json-enc"
+				class="flex flex-col gap-4 p-6 bg-white shadow-lg rounded-lg
+                w-96"
+			>
+				<h2 class="text-2xl font-semibold text-center">Sign Up</h2>
+				<label for="username" class="font-medium">Username</label>
+				<input
+					class="border border-gray-300 bg-gray-100 rounded-md px-3
+                    py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+					type="text"
+					id="username"
+					name="username"
+					autocomplete="off"
+					required
+				/>
+				<label for="email" class="font-medium">Email</label>
+				<input
+					class="border border-gray-300 bg-gray-100 rounded-md px-3
+                    py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+					type="email"
+					id="email"
+					name="email"
+					autocomplete="off"
+					required
+				/>
+				<label for="password" class="font-medium">Password</label>
+				<input
+					class="border border-gray-300 bg-gray-100 rounded-md px-3
+                    py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+					type="password"
+					id="password"
+					name="password"
+					autocomplete="off"
+					required
+				/>
+				<div id="signup-response"></div>
+				<button
+					type="submit"
+					class="mt-4 bg-blue-600 text-white font-semibold py-2
+                    rounded-md hover:bg-blue-700 transition duration-200"
+				>
+					Sign Up
+				</button>
+			</form>
+		</div>
+		<script>
+            document.body.addEventListener("htmx:afterRequest", function (event) {
+                let responseDiv = document.querySelector("#signup-response");
+
+                if (!event.detail.successful) {
+                    if (event.detail.xhr.status === 400 || event.detail.xhr.status === 500) {
+                        let errorMessage = event.detail.xhr.responseText;
+                        responseDiv.innerHTML = `<p class="text-red-500">${errorMessage}</p>`;
+                    } else {
+                        responseDiv.innerHTML = `<p class="text-red-500">An unexpected error occurred.</p>`;
+                    }
+                } else {
+                    let res = JSON.parse(event.detail.xhr.responseText);
+                    responseDiv.innerHTML = `<p class="text-green-500">${res.message}</p>`;
+                }
+            });
+        </script>
+	}
 }
