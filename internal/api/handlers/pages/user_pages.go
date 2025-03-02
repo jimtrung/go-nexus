@@ -1,21 +1,29 @@
-package pages
+package pageshandlers
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jimtrung/go-nexus/internal/api/handlers"
 	"github.com/jimtrung/go-nexus/internal/infra/logger/zap"
 	"github.com/jimtrung/go-nexus/internal/services"
-	"github.com/jimtrung/go-nexus/templates/components/user"
+	userComponents "github.com/jimtrung/go-nexus/templates/components/user"
 )
 
 func RenderSignupPage(c *gin.Context) {
-    if err := handlers.Render(c, user.Signup()); err != nil {
+    if err := handlers.Render(c, userComponents.Signup()); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "error": "Failed to render the page",
+        })
         zap.NewLogger().Error("error", err.Error())
     }
 }
 
 func RenderLoginPage(c *gin.Context) {
-    if err := handlers.Render(c, user.Login()); err != nil {
+    if err := handlers.Render(c, userComponents.Login()); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "error": "Failed to render the page",
+        })
         zap.NewLogger().Error("error", err.Error())
     }
 }
@@ -40,13 +48,19 @@ func RenderProfilePage(c *gin.Context) {
     }
 
     zap.NewLogger().Info("data", userData)
-    if err := handlers.Render(c, user.Profile(userData)); err != nil {
+    if err := handlers.Render(c, userComponents.Profile(userData)); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "error": "Failed to render the page",
+        })
         zap.NewLogger().Error("error", err.Error())
     }
 }
 
 func RenderForgotPasswordPage(c *gin.Context) {
-    if err := handlers.Render(c, user.ForgotPassword()); err != nil {
+    if err := handlers.Render(c, userComponents.ForgotPassword()); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "error": "Failed to render the page",
+        })
         zap.NewLogger().Error("error", err.Error())
     }
 }

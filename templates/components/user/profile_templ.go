@@ -10,6 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "github.com/jimtrung/go-nexus/templates/layout"
 import "github.com/jimtrung/go-nexus/internal/domain/models"
+import "strconv"
 
 func Profile(user models.User) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -51,7 +52,7 @@ func Profile(user models.User) templ.Component {
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(user.Username)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/user/profile.templ`, Line: 14, Col: 71}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/user/profile.templ`, Line: 15, Col: 71}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -64,26 +65,39 @@ func Profile(user models.User) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(user.Email)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/user/profile.templ`, Line: 16, Col: 57}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/user/profile.templ`, Line: 17, Col: 57}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</p><p class=\"text-gray-500\">Joined: ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</p><p class=\"text-gray-600\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var5 string
-			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(user.CreatedAt.String())
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.FormatBool(user.Verified))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/user/profile.templ`, Line: 18, Col: 78}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/user/profile.templ`, Line: 19, Col: 80}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</p><button hx-get=\"/profile/edit\" hx-target=\"#profile-content\" hx-swap=\"outerHTML\" class=\"mt-4 bg-blue-600 text-white font-semibold py-2\n                        px-4 rounded-md hover:bg-blue-700 transition\n                        duration-200\">Edit Profile</button> <button hx-get=\"/auth/logout\" class=\"mt-4 bg-blue-600 text-white font-semibold py-2\n                        px-4 rounded-md hover:bg-blue-700 transition\n                        duration-200\">Log Out</button></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</p><p class=\"text-gray-500\">Joined: ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var6 string
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(user.CreatedAt.String())
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/user/profile.templ`, Line: 21, Col: 78}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</p><button hx-get=\"/profile/edit\" hx-target=\"#profile-content\" hx-swap=\"outerHTML\" class=\"mt-4 bg-blue-600 text-white font-semibold py-2\n                        px-4 rounded-md hover:bg-blue-700 transition\n                        duration-200\">Edit Profile</button> <button hx-get=\"/auth/logout\" class=\"mt-4 bg-blue-600 text-white font-semibold py-2\n                        px-4 rounded-md hover:bg-blue-700 transition\n                        duration-200\">Log Out</button></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -11,8 +11,8 @@ func SetupAuthRoutes(r *Routes) {
         auth.GET("/:provider", authHandlers.BeginAuthProviderCallback)
         auth.GET("/:provider/callback", authHandlers.GetAuthCallBackFunction)
 
-        auth.POST("/login", authHandlers.Login)
         auth.POST("/signup", authHandlers.Signup)
+        auth.POST("/login", authHandlers.Login)
         auth.GET("/logout", authHandlers.Logout)
 
         auth.GET("/validate", middleware.RequireAuth, authHandlers.Validate)

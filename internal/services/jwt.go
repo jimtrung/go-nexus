@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"os"
 	"time"
 
@@ -14,6 +15,9 @@ func CreateSignedToken(username string) (string, error) {
 	})
 
 	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET_KEY")))
+    if err != nil {
+        return "", fmt.Errorf("Failed to sign the token")
+    }
 
-	return tokenString, err
+	return tokenString, nil
 }

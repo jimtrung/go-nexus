@@ -2,6 +2,7 @@ package user
 
 import "github.com/jimtrung/go-nexus/templates/layout"
 import "github.com/jimtrung/go-nexus/internal/domain/models"
+import "strconv"
 
 templ Profile(user models.User) {
     @layout.Base("Profile") {
@@ -14,6 +15,8 @@ templ Profile(user models.User) {
                     <h2 class="text-2xl font-semibold"> { user.Username }
                     </h2>
                     <p class="text-gray-600">{ user.Email }
+                    </p>
+                    <p class="text-gray-600">{ strconv.FormatBool(user.Verified) }
                     </p>
                     <p class="text-gray-500">Joined: { user.CreatedAt.String() }</p>
                     <button

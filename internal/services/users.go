@@ -10,8 +10,11 @@ import (
 
 func InsertIntoUsers(user models.User) error {
     result := db.DB.Create(&user)
+    if result.Error != nil {
+        return fmt.Errorf("Username/Email is already used")
+    }
 
-    return result.Error
+    return nil
 }
 
 func GetUserByUsername(username string) (models.User, error) {
@@ -20,8 +23,11 @@ func GetUserByUsername(username string) (models.User, error) {
     result := db.DB.Select(
         "username", "email", "created_at",
     ).Where("username = ?", username).Find(&res)
+    if result.Error != nil {
+        return res, fmt.Errorf("Cannot find user with email %s", username)
+    }
 
-    return res, result.Error
+    return res, nil
 }
 
 func GetUserByEmail(email string) (models.User, error) {
@@ -30,8 +36,11 @@ func GetUserByEmail(email string) (models.User, error) {
     result := db.DB.Select(
         "username", "email", "created_at",
     ).Where("email = ?", email).Find(&res)
+    if result.Error != nil {
+        return res, fmt.Errorf("Cannot find user with email %s", email)
+    }
 
-    return res, result.Error
+    return res, nil
 }
 
 func HashPassword(password string) (string, error) {
@@ -54,7 +63,7 @@ func IsValidUser(user models.User) error {
     if err := bcrypt.CompareHashAndPassword(
         []byte(res.Password), []byte(user.Password),
     ); err != nil {
-        return err
+        return fmt.Errorf("Wrong password")
     }
 
     return nil

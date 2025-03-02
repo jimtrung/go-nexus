@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/jimtrung/go-nexus/internal/domain/models"
-	"github.com/jimtrung/go-nexus/internal/infra/db"
 	"gorm.io/gorm"
 )
 
@@ -29,8 +28,7 @@ func SignupIfNotExist(email string) (models.User, error) {
         Email: email,
         Password: hashedPassword,
     }
+    err = InsertIntoUsers(userInfo)
 
-    result := db.DB.Create(&userInfo)
-
-    return userInfo, result.Error
+    return userInfo, err
 }
