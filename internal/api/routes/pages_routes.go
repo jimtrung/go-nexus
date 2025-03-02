@@ -13,6 +13,7 @@ func SetupPagesRoutes(r *Routes) {
             user.GET("/signup", pages.RenderSignupPage)
             user.GET("/login", pages.RenderLoginPage)
             user.GET("/profile", middleware.RequireAuth, pages.RenderProfilePage)
+            user.GET("/forgot-password", pages.RenderForgotPasswordPage)
         }
     }
 

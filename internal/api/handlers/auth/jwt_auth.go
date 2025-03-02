@@ -5,7 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jimtrung/go-nexus/internal/domain/models"
-	"github.com/jimtrung/go-nexus/internal/infra/logger/zap"
 	"github.com/jimtrung/go-nexus/internal/services"
 )
 
@@ -54,13 +53,9 @@ func Login(c *gin.Context) {
     c.SetSameSite(http.SameSiteLaxMode)
     c.SetCookie("Authorization", token, 3600 * 4, "/", "", true, true)
 
-    cookies := c.Request.Cookies()
-    zap.NewLogger().Info("cookies", cookies)
-
     c.Header("HX-Location", "/p/user/profile")
     c.Status(http.StatusOK)
 }
-
 
 func Validate(c *gin.Context) {
     usernameAny, _ := c.Get("username")
@@ -80,9 +75,6 @@ func Validate(c *gin.Context) {
 func Logout(c *gin.Context) {
     c.SetSameSite(http.SameSiteLaxMode)
     c.SetCookie("Authorization", "", 0, "/", "", true, true)
-
-    cookies := c.Request.Cookies()
-    zap.NewLogger().Info("cookies", cookies)
 
     c.Header("HX-Location", "/p/user/login")
     c.Status(http.StatusOK)

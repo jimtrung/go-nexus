@@ -26,9 +26,10 @@ func RenderProfilePage(c *gin.Context) {
         zap.NewLogger().Error("error", "Username has not been set")
         return
     }
+
     username := data.(string)
     if username != data.(string) {
-        zap.NewLogger().Error("error", "Wrong data")
+        zap.NewLogger().Error("error", "Wrong data type")
         return
     }
 
@@ -40,6 +41,12 @@ func RenderProfilePage(c *gin.Context) {
 
     zap.NewLogger().Info("data", userData)
     if err := handlers.Render(c, user.Profile(userData)); err != nil {
+        zap.NewLogger().Error("error", err.Error())
+    }
+}
+
+func RenderForgotPasswordPage(c *gin.Context) {
+    if err := handlers.Render(c, user.ForgotPassword()); err != nil {
         zap.NewLogger().Error("error", err.Error())
     }
 }
