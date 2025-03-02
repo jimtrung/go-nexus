@@ -19,3 +19,6 @@ migrate-down:
 
 migrate-force:
 	$(MIGRATE_CMD) force $(VERSION)
+
+lines:
+	 find . -type f \( -name "*.go" -o -name "*.templ" \) -print0 | xargs -0 wc -l

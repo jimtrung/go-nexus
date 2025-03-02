@@ -24,6 +24,16 @@ func GetUserByUsername(username string) (models.User, error) {
     return res, result.Error
 }
 
+func GetUserByEmail(email string) (models.User, error) {
+    var res models.User
+
+    result := db.DB.Select(
+        "username", "email", "created_at",
+    ).Where("email = ?", email).Find(&res)
+
+    return res, result.Error
+}
+
 func HashPassword(password string) (string, error) {
     hashed, err := bcrypt.GenerateFromPassword([]byte(password), 8)
     if err != nil {

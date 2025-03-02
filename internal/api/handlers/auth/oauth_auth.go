@@ -2,13 +2,11 @@ package auth
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/sessions"
-	"github.com/jimtrung/go-nexus/internal/domain/models"
 	"github.com/jimtrung/go-nexus/internal/services"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
@@ -68,21 +66,14 @@ func GetAuthCallBackFunction(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
-	fmt.Println(user)
 
-	randomPassword := services.GenerateRandomPassword()
-
-	var userInfo = models.User{
-		Username: user.Email,
-		Password: randomPassword,
-		Email:    user.Email,
-	}
-	if err := services.InsertIntoUsers(userInfo); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
+    userInfo, err := services.SignupIfNotExist(user.Email)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "error": err.Error(),
+        })
+        return
+    }
 
     signedToken, err := services.CreateSignedToken(userInfo.Username)
     if err != nil {
@@ -95,5 +86,5 @@ func GetAuthCallBackFunction(c *gin.Context) {
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", signedToken, 3600*24, "/", "", false, true)
 
-	c.Redirect(http.StatusFound, "http://127.0.0.1:8080/profile")
+	c.Redirect(http.StatusFound, "http://127.0.0.1:8080/p/user/profile")
 }

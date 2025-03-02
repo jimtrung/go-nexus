@@ -25,6 +25,5 @@ func main() {
 		return
 	}
 
-	// logger.Info("Server is running on port " + port)
 	server.StartServer(database, port)
 }
