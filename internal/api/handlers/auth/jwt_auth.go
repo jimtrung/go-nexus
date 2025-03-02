@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jimtrung/go-nexus/internal/domain/models"
+	"github.com/jimtrung/go-nexus/internal/infra/logger/zap"
 	"github.com/jimtrung/go-nexus/internal/services"
 )
 
@@ -12,11 +13,13 @@ func Signup(c *gin.Context) {
     var req models.User
     if err := c.Bind(&req); err != nil {
         c.String(http.StatusInternalServerError, "Wrong JSON format")
+        return
     }
 
     hashedPassword, err := services.HashPassword(req.Password)
     if err != nil {
         c.String(http.StatusInternalServerError, err.Error())
+        return
     }
     req.Password = hashedPassword
 
@@ -25,46 +28,37 @@ func Signup(c *gin.Context) {
         return
     }
 
-	c.JSON(http.StatusOK, gin.H{
-        "message": "User added succesfully",
-    })
+    c.Header("HX-Location", "/p/user/login")
+    c.Status(http.StatusOK)
 }
 
 func Login(c *gin.Context) {
-	username, password := c.PostForm("username"), c.PostForm("password")
-	if username == "" || password == "" {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Empty field",
-		})
-		return
-	}
+    var req models.User
 
-	req := models.User{
-		Username: username,
-		Password: password,
-	}
-
-    // Compare password
-    if err := services.IsValidUser(req); err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{
-            "error": err.Error(),
-        })
+    if err := c.Bind(&req); err != nil {
+        c.String(http.StatusBadRequest, "Wrong JSON format")
         return
     }
 
-    token, err := services.CreateSignedToken(username)
+    if err := services.IsValidUser(req); err != nil {
+        c.String(http.StatusInternalServerError, "Wrong username/password")
+        return
+    }
+
+    token, err := services.CreateSignedToken(req.Username)
     if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{
-            "error": "Failed to sign token",
-        })
+        c.String(http.StatusInternalServerError, "Failed to sign token")
         return
     }
 
     c.SetSameSite(http.SameSiteLaxMode)
-    c.SetCookie("Authorization", token, 3600 * 4, "/", "", false, true)
-	c.JSON(http.StatusOK, gin.H{
-        "message": "Login successfully",
-    })
+    c.SetCookie("Authorization", token, 3600 * 4, "/", "", true, true)
+
+    cookies := c.Request.Cookies()
+    zap.NewLogger().Info("cookies", cookies)
+
+    c.Header("HX-Location", "/p/user/profile")
+    c.Status(http.StatusOK)
 }
 
 
@@ -81,4 +75,15 @@ func Validate(c *gin.Context) {
     c.JSON(http.StatusOK, gin.H{
         "message": "Hello " + username,
     })
+}
+
+func Logout(c *gin.Context) {
+    c.SetSameSite(http.SameSiteLaxMode)
+    c.SetCookie("Authorization", "", 0, "/", "", true, true)
+
+    cookies := c.Request.Cookies()
+    zap.NewLogger().Info("cookies", cookies)
+
+    c.Header("HX-Location", "/p/user/login")
+    c.Status(http.StatusOK)
 }

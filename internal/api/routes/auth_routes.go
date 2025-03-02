@@ -2,20 +2,19 @@ package routes
 
 import (
 	authHandlers "github.com/jimtrung/go-nexus/internal/api/handlers/auth"
-	"github.com/jimtrung/go-nexus/internal/middlware"
+	"github.com/jimtrung/go-nexus/internal/middleware"
 )
 
 func SetupAuthRoutes(r *Routes) {
     auth := r.Router.Group("/auth")
     {
-        // Oauth with google, oauth with facebook
-        auth.GET("/:provider")
-        auth.GET("/:provider/callback")
+        auth.GET("/:provider", authHandlers.BeginAuthProviderCallback)
+        auth.GET("/:provider/callback", authHandlers.GetAuthCallBackFunction)
 
-        // Manually login with password + email
         auth.POST("/login", authHandlers.Login)
         auth.POST("/signup", authHandlers.Signup)
+        auth.GET("/logout", authHandlers.Logout)
 
-        auth.GET("/validate", middlware.RequireAuth, authHandlers.Validate)
+        auth.GET("/validate", middleware.RequireAuth, authHandlers.Validate)
     }
 }

@@ -59,9 +59,6 @@ templ Login() {
             } else {
                 responseDiv.innerHTML = `<p class="text-red-500">An unexpected error occurred.</p>`;
             }
-        } else {
-            let res = JSON.parse(event.detail.xhr.responseText);
-            responseDiv.innerHTML = `<p class="text-green-500">${res.message}</p>`;
         }
     });
 </script>

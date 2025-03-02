@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/jimtrung/go-nexus/internal/api"
+	"github.com/jimtrung/go-nexus/internal/api/handlers/auth"
 	"github.com/jimtrung/go-nexus/internal/infra/db"
 	"github.com/jimtrung/go-nexus/internal/infra/env"
 	"github.com/jimtrung/go-nexus/internal/infra/logger/zap"
@@ -15,6 +16,7 @@ func main() {
 	}
 
 	database := db.ConnectToDatabase()
+    auth.NewOAuth()
 	server := api.NewServer("debug")
 
 	port, err := env.GetPort()

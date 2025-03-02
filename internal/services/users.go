@@ -14,6 +14,16 @@ func InsertIntoUsers(user models.User) error {
     return result.Error
 }
 
+func GetUserByUsername(username string) (models.User, error) {
+    var res models.User
+
+    result := db.DB.Select(
+        "username", "email", "created_at",
+    ).Where("username = ?", username).Find(&res)
+
+    return res, result.Error
+}
+
 func HashPassword(password string) (string, error) {
     hashed, err := bcrypt.GenerateFromPassword([]byte(password), 8)
     if err != nil {

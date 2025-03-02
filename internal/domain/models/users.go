@@ -1,12 +1,12 @@
 package models
 
-type SignupRequest struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
+import "time"
 
-type LoginRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+type User struct {
+	UserID    uint      `gorm:"primaryKey;autoIncrement"`
+	Username  string    `gorm:"type:varchar(30);not null;unique"`
+	Email     string    `gorm:"type:varchar(100);not null;unique"`
+	Password  string    `gorm:"type:varchar(100);not null"`
+	CreatedAt time.Time `gorm:"type:timestamptz;autoCreateTime"`
+	UpdatedAt time.Time `gorm:"type:timestamptz;autoUpdateTime"`
 }
