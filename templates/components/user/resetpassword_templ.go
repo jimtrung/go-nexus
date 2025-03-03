@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "github.com/jimtrung/go-nexus/templates/layout"
 
-func Verify() templ.Component {
+func ResetPassword() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -43,13 +43,13 @@ func Verify() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex min-h-screen items-center justify-center bg-gray-100\"><div class=\"w-full max-w-md space-y-6 rounded-lg bg-white p-8 shadow-md\"><h2 class=\"text-center text-2xl font-bold text-gray-900\">Email Verification</h2><p class=\"text-center text-gray-600\">Verifying your email, please wait...</p><div class=\"flex justify-center\"><svg class=\"h-8 w-8 animate-spin text-blue-500\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\"><circle class=\"opacity-25\" cx=\"12\" cy=\"12\" r=\"10\" stroke=\"currentColor\" stroke-width=\"4\"></circle> <path class=\"opacity-75\" fill=\"currentColor\" d=\"M4 12a8 8 0 0116 0H4z\"></path></svg></div><p class=\"text-center text-gray-600\">If this takes too long, <a href=\"/p/user/login\" class=\"text-blue-500 hover:underline\">click here</a> to return to login.</p></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex min-h-screen items-center justify-center bg-gray-100\"><div class=\"w-full max-w-md space-y-6 rounded-lg bg-white p-8 shadow-md\"><h2 class=\"text-center text-2xl font-bold text-gray-900\">Reset Password</h2><p class=\"text-center text-gray-600\">Enter your new password below.</p><form hx-post=\"/auth/reset-password\" hx-target=\"#reset-feedback\" hx-vals=\"js:{ token: window.location.pathname.split(&#34;/&#34;).pop() }\" hx-swap=\"innerHTML\" class=\"space-y-4\"><div><label class=\"block text-sm font-medium text-gray-700\">New Password</label> <input type=\"password\" name=\"password\" required class=\"mt-1 w-full rounded-lg border p-2 focus:border-blue-500 focus:ring-blue-500\"></div><div><label class=\"block text-sm font-medium text-gray-700\">Confirm New Password</label> <input type=\"password\" name=\"confirm_password\" required class=\"mt-1 w-full rounded-lg border p-2 focus:border-blue-500 focus:ring-blue-500\"></div><button type=\"submit\" class=\"w-full rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600\">Reset Password</button></form><div id=\"reset-feedback\" class=\"text-center text-red-500\"></div><p class=\"text-center text-gray-600\">Remembered your password? <a href=\"/p/user/login\" class=\"text-blue-500 hover:underline\">Go back to login</a></p></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = layout.Base("Verify").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = layout.Base("Reset Password").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

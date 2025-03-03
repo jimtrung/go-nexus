@@ -81,3 +81,12 @@ func RenderVerifyPage(c *gin.Context) {
         return
     }
 }
+
+func RenderResetPasswordPage(c *gin.Context) {
+    if err := handlers.Render(c, userComponents.ResetPassword()); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "error": "Failed to render the page",
+        })
+        zap.NewLogger().Error("error", err.Error())
+    }
+}

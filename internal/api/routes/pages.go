@@ -13,8 +13,9 @@ func SetupPagesRoutes(r *Routes) {
             user.GET("/signup", pagesHandlers.RenderSignupPage)
             user.GET("/login", pagesHandlers.RenderLoginPage)
             user.GET("/profile", middleware.RequireAuth, pagesHandlers.RenderProfilePage)
-            user.GET("/forgot-password", pagesHandlers.RenderForgotPasswordPage)
             user.GET("/verify/:token", pagesHandlers.RenderVerifyPage)
+            user.GET("/forgot-password", pagesHandlers.RenderForgotPasswordPage)
+            user.GET("/reset-password/:token", pagesHandlers.RenderResetPasswordPage)
         }
     }
 

@@ -69,12 +69,37 @@ func IsValidUser(user models.User) error {
     return nil
 }
 
+func AddTokenToUser(email, token string) error {
+    result := db.DB.Table("users").Where("email = ?", email).Update("token", token)
+
+    return result.Error
+}
+
+func RemoveToken(token string) {
+    db.DB.Table("users").Where("token = ?", token).Update("token", "")
+}
+
 func VerifyUser(token string) error {
     if token == "" {
         return fmt.Errorf("Cannot find the token")
     }
 
     result := db.DB.Table("users").Where("token = ?", token).Update("verified", "true").Update("token", "")
+
+    return result.Error
+}
+
+func ResetPassword(token, newPassword string) error {
+    if token == "" {
+        return fmt.Errorf("Cannot find the token")
+    }
+
+    hashedPassword, err := HashPassword(newPassword)
+    if err != nil {
+        return err
+    }
+
+    result := db.DB.Table("users").Where("token = ?", token).Update("password", hashedPassword).Update("token", "")
 
     return result.Error
 }

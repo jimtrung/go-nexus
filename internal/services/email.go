@@ -42,3 +42,19 @@ func SendVerificationEmail(email, token string) error {
 
 	return smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, message)
 }
+
+func ResetPasswordEmail(email, token string) error {
+	from := os.Getenv("EMAIL")
+	password := os.Getenv("EMAIL_PASSWORD")
+	to := []string{email}
+	smtpHost := "smtp.gmail.com"
+	smtpPort := "587"
+
+	auth := smtp.PlainAuth("", from, password, smtpHost)
+	message := []byte(fmt.Sprintf("Subject: Reset Password\n\nClick here to reset your password: http://127.0.0.1:8080/p/user/reset-password/%s",
+        token,
+    ))
+    fmt.Println("email sent")
+
+	return smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, message)
+}

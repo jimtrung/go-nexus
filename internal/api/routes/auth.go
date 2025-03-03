@@ -13,5 +13,7 @@ func SetupAuthRoutes(r *Routes) {
         auth.POST("/signup", authHandlers.Signup)
         auth.POST("/login", authHandlers.Login)
         auth.GET("/logout", authHandlers.Logout)
+        auth.POST("/forgot-password", authHandlers.ForgotPassword)
+        auth.POST("/reset-password", authHandlers.ResetPassword)
     }
 }
