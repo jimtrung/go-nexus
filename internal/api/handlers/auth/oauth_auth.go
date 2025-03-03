@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/sessions"
+	"github.com/jimtrung/go-nexus/internal/infra/logger/zap"
 	"github.com/jimtrung/go-nexus/internal/services"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
@@ -69,6 +70,7 @@ func GetAuthCallBackFunction(c *gin.Context) {
 
     userInfo, err := services.SignupIfNotExist(user.Email)
     if err != nil {
+        zap.NewLogger().Error("error", err.Error())
         c.JSON(http.StatusInternalServerError, gin.H{
             "error": err.Error(),
         })

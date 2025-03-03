@@ -1,34 +1,31 @@
 package services
 
 import (
-	"errors"
-
 	"github.com/jimtrung/go-nexus/internal/domain/models"
-	"gorm.io/gorm"
 )
 
 func SignupIfNotExist(email string) (models.User, error) {
-    userInfo, err := GetUserByEmail(email)
-    if err == nil {
-        return userInfo, nil
-    }
+	userInfo, err := GetUserByEmail(email)
 
-    if !errors.Is(err, gorm.ErrRecordNotFound) {
-        return models.User{}, nil
-    }
+	if err == nil {
+		return userInfo, nil
+	}
 
 	randomPassword := GenerateRandomPassword()
-    hashedPassword, err := HashPassword(randomPassword)
-    if err != nil {
-        return models.User{}, err
+	hashedPassword, err := HashPassword(randomPassword)
+	if err != nil {
+		return models.User{}, err
+	}
+
+	userInfo = models.User{
+		Username: email,
+		Email:    email,
+		Verified: true,
+		Password: hashedPassword,
+	}
+    if err := InsertIntoUsers(userInfo); err != nil {
+		return models.User{}, err
     }
 
-    userInfo = models.User{
-        Username: email,
-        Email: email,
-        Password: hashedPassword,
-    }
-    err = InsertIntoUsers(userInfo)
-
-    return userInfo, err
+	return userInfo, nil
 }

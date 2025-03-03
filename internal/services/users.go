@@ -36,7 +36,7 @@ func GetUserByEmail(email string) (models.User, error) {
     result := db.DB.Select(
         "username", "email", "created_at",
     ).Where("email = ?", email).Find(&res)
-    if result.Error != nil {
+    if result.RowsAffected == 0 {
         return res, fmt.Errorf("Cannot find user with email %s", email)
     }
 
