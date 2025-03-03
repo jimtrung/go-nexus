@@ -1,7 +1,6 @@
 package authhandlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -29,13 +28,14 @@ func Signup(c *gin.Context) {
 		return
 	}
 	req.Password = hashedPassword
+	token := services.GenerateToken()
+    req.Token = token
 
 	if err := services.InsertIntoUsers(req); err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	token := services.GenerateToken()
 	err = services.SendVerificationEmail(req.Email, token)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -44,7 +44,6 @@ func Signup(c *gin.Context) {
 		return
 	}
 
-    fmt.Println("Email sent")
 	c.Header("HX-Location", "/p/user/login")
 	c.Status(http.StatusOK)
 }
@@ -73,19 +72,6 @@ func Login(c *gin.Context) {
 
 	c.Header("HX-Location", "/p/user/profile")
 	c.Status(http.StatusOK)
-}
-
-func Validate(c *gin.Context) {
-	usernameAny, _ := c.Get("username")
-	username, ok := usernameAny.(string)
-	if !ok {
-		c.String(http.StatusInternalServerError, "Failed to get username from storage")
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Hello " + username,
-	})
 }
 
 func Logout(c *gin.Context) {

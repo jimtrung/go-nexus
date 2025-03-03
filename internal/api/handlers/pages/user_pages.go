@@ -64,3 +64,20 @@ func RenderForgotPasswordPage(c *gin.Context) {
         zap.NewLogger().Error("error", err.Error())
     }
 }
+
+func RenderVerifyPage(c *gin.Context) {
+    if err := handlers.Render(c, userComponents.Verify()); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "error": "Failed to render the page",
+        })
+        zap.NewLogger().Error("error", err.Error())
+    }
+
+    token := c.Param("token")
+    if err := services.VerifyUser(token); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H {
+            "error": err.Error(),
+        })
+        return
+    }
+}

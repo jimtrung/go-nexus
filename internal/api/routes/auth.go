@@ -2,7 +2,6 @@ package routes
 
 import (
 	authHandlers "github.com/jimtrung/go-nexus/internal/api/handlers/auth"
-	"github.com/jimtrung/go-nexus/internal/middleware"
 )
 
 func SetupAuthRoutes(r *Routes) {
@@ -14,7 +13,5 @@ func SetupAuthRoutes(r *Routes) {
         auth.POST("/signup", authHandlers.Signup)
         auth.POST("/login", authHandlers.Login)
         auth.GET("/logout", authHandlers.Logout)
-
-        auth.GET("/validate", middleware.RequireAuth, authHandlers.Validate)
     }
 }

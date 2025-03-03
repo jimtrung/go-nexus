@@ -1,0 +1,10 @@
+package user
+
+import "github.com/jimtrung/go-nexus/templates/layout"
+
+templ Verify() {
+    @layout.Base("Verify") {
+        <p>Verifying...</p>
+        <a href="/p/user/login">Click this go go back to login page</a>
+    }
+}

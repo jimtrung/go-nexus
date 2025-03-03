@@ -16,6 +16,7 @@ type User struct {
 	Email     string    `gorm:"type:varchar(100);not null;unique" json:"email"`
 	Password  string    `gorm:"type:varchar(100);not null" json:"-"`
 	Role      Role      `gorm:"type:varchar(20);default:'client'" json:"role"`
+	Token     string    `gorm:"type:varchar(50);default:''" json:"token"`
 	Verified  bool      `gorm:"default:false" json:"verified"`
 	CreatedAt time.Time `gorm:"type:timestamptz;autoCreateTime" json:"created_at"`
 	UpdatedAt time.Time `gorm:"type:timestamptz;autoUpdateTime" json:"updated_at"`

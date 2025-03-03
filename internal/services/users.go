@@ -68,3 +68,13 @@ func IsValidUser(user models.User) error {
 
     return nil
 }
+
+func VerifyUser(token string) error {
+    if token == "" {
+        return fmt.Errorf("Cannot find the token")
+    }
+
+    result := db.DB.Table("users").Where("token = ?", token).Update("verified", "true").Update("token", "")
+
+    return result.Error
+}
