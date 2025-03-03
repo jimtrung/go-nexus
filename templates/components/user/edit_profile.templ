@@ -1,0 +1,27 @@
+package user
+
+import "github.com/jimtrung/go-nexus/internal/domain/models"
+
+templ EditProfileContent(user models.User) {
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl">
+        <h2 class="text-2xl font-semibold">Edit Profile</h2>
+        <form hx-post="/profile/update" hx-target="#profile-content">
+            <label class="block text-sm font-medium">Username</label>
+            <input type="text" name="username" value="{ user.Username }"
+                class="w-full border rounded-md p-2 mt-1" required />
+
+            <label class="block text-sm font-medium mt-3">Email</label>
+            <input type="email" name="email" value="{ user.Email }"
+                class="w-full border rounded-md p-2 mt-1" required />
+
+            <button type="submit"
+                class="mt-4 w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700 transition">
+                Save Changes
+            </button>
+        </form>
+    </div>
+}
+
+templ EditProfilePageView(user models.User) {
+    @ProfilePage(user, EditProfileContent(user))
+}

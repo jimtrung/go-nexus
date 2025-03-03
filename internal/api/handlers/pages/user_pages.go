@@ -5,8 +5,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jimtrung/go-nexus/internal/api/handlers"
+	"github.com/jimtrung/go-nexus/internal/domain/models"
 	"github.com/jimtrung/go-nexus/internal/infra/logger/zap"
 	"github.com/jimtrung/go-nexus/internal/services"
+	"github.com/jimtrung/go-nexus/templates/components"
 	userComponents "github.com/jimtrung/go-nexus/templates/components/user"
 )
 
@@ -47,8 +49,10 @@ func RenderProfilePage(c *gin.Context) {
         return
     }
 
-    zap.NewLogger().Info("data", userData)
-    if err := handlers.Render(c, userComponents.Profile(userData)); err != nil {
+    if err := handlers.Render(
+        c, userComponents.ProfilePage(
+            userData, userComponents.ProfileContent(userData)),
+        ); err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{
             "error": "Failed to render the page",
         })
@@ -84,6 +88,42 @@ func RenderVerifyPage(c *gin.Context) {
 
 func RenderResetPasswordPage(c *gin.Context) {
     if err := handlers.Render(c, userComponents.ResetPassword()); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "error": "Failed to render the page",
+        })
+        zap.NewLogger().Error("error", err.Error())
+    }
+}
+
+func RenderEditProfilePage(c *gin.Context) {
+    if err := handlers.Render(
+        c, userComponents.ProfilePage(
+            models.User{}, userComponents.EditProfileContent(models.User{})),
+        ); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "error": "Failed to render the page",
+        })
+        zap.NewLogger().Error("error", err.Error())
+    }
+}
+
+func RenderSecurityPage(c *gin.Context) {
+    if err := handlers.Render(
+        c, userComponents.ProfilePage(
+            models.User{}, userComponents.SecurityContent()),
+        ); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "error": "Failed to render the page",
+        })
+        zap.NewLogger().Error("error", err.Error())
+    }
+}
+
+func RenderPreferencesPage(c *gin.Context) {
+    if err := handlers.Render(
+        c, userComponents.ProfilePage(
+            models.User{}, components.PreferencesContent()),
+        ); err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{
             "error": "Failed to render the page",
         })

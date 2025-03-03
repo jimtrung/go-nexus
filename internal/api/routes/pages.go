@@ -12,11 +12,14 @@ func SetupPagesRoutes(r *Routes) {
         {
             user.GET("/signup", pagesHandlers.RenderSignupPage)
             user.GET("/login", pagesHandlers.RenderLoginPage)
-            user.GET("/profile", middleware.RequireAuth, pagesHandlers.RenderProfilePage)
             user.GET("/verify/:token", pagesHandlers.RenderVerifyPage)
             user.GET("/forgot-password", pagesHandlers.RenderForgotPasswordPage)
             user.GET("/reset-password/:token", pagesHandlers.RenderResetPasswordPage)
+            user.GET("/profile", middleware.RequireAuth, pagesHandlers.RenderProfilePage)
+            user.GET("/profile/edit", pagesHandlers.RenderEditProfilePage)
+            user.GET("/security", pagesHandlers.RenderSecurityPage)
         }
+        p.GET("/preferences", pagesHandlers.RenderPreferencesPage)
     }
 
     r.Router.Static("/static", "./static")
