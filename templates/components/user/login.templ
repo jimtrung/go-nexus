@@ -76,18 +76,19 @@ templ Login() {
 			</form>
 		</div>
 		<script>
-    document.body.addEventListener("htmx:afterRequest", function (event) {
-        let responseDiv = document.querySelector("#login-response");
+            document.body.addEventListener("htmx:afterRequest", function (event) {
+                let responseDiv = document.querySelector("#login-response");
 
-        if (!event.detail.successful) {
-            if (event.detail.xhr.status === 400 || event.detail.xhr.status === 500) {
-                let errorMessage = event.detail.xhr.responseText;
-                responseDiv.innerHTML = `<p class="text-red-500">${errorMessage}</p>`;
-            } else {
-                responseDiv.innerHTML = `<p class="text-red-500">An unexpected error occurred.</p>`;
-            }
-        }
-    });
-</script>
+                if (!event.detail.successful) {
+                    if (event.detail.xhr.status === 400 || event.detail.xhr.status === 500) {
+                        let errorMessage = event.detail.xhr.responseText;
+                        responseDiv.innerHTML = `<p class="text-red-500">${errorMessage}</p>`;
+                    } else {
+                        let errorMessage = event.detail.xhr.responseText;
+                        responseDiv.innerHTML = `<p class="text-red-500">${errorMessage}</p>`;
+                    }
+                }
+            });
+        </script>
 	}
 }

@@ -1,7 +1,6 @@
 package authhandlers
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -81,8 +80,7 @@ func Logout(c *gin.Context) {
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", "", 0, "/", "", true, true)
 
-	c.Header("HX-Location", "/p/user/login")
-	c.Status(http.StatusOK)
+    c.Redirect(http.StatusMovedPermanently, "/p/user/login")
 }
 
 func ForgotPassword(c *gin.Context) {
@@ -113,7 +111,7 @@ func ForgotPassword(c *gin.Context) {
     }
 
     go func() {
-        time.Sleep(time.Second * 60)
+        time.Sleep(time.Second * 300)
         services.RemoveToken(userReq.Token)
         zap.NewLogger().Info("message", "Token removed from user")
     }()
@@ -131,9 +129,8 @@ func ResetPassword(c *gin.Context) {
     }
 
     token := c.PostForm("token")
-    fmt.Println(token)
-
     resetReq.Token = token
+
     if resetReq.Password != resetReq.ConfirmPassword {
         c.String(http.StatusInternalServerError, "Password do not match")
         return

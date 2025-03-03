@@ -2,32 +2,12 @@ package models
 
 import "time"
 
-type Role string
-
-const (
-	Admin     Role = "admin"
-	Moderator Role = "moderator"
-	Client    Role = "client"
-)
-
-func (r Role) String() string {
-    switch r {
-        case Admin:
-            return "admin"
-        case Moderator:
-            return "admin"
-        case Client:
-            return "admin"
-    }
-    return ""
-}
-
 type User struct {
 	UserID    uint      `gorm:"primaryKey;autoIncrement" json:"user_id"`
 	Username  string    `gorm:"type:varchar(30);not null;unique" json:"username"`
 	Email     string    `gorm:"type:varchar(100);not null;unique" json:"email"`
-	Password  string    `gorm:"type:varchar(100);not null" json:"-"`
-	Role      Role      `gorm:"type:varchar(20);default:'client'" json:"role"`
+	Password  string    `gorm:"type:varchar(100);not null" json:"password"`
+	Role      Role      `gorm:"type:varchar(20);default:'user'" json:"role"`
 	Token     string    `gorm:"type:varchar(50);default:''" json:"token"`
 	Verified  bool      `gorm:"default:false" json:"verified"`
 	CreatedAt time.Time `gorm:"type:timestamptz;autoCreateTime" json:"created_at"`

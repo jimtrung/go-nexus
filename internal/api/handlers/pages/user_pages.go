@@ -48,6 +48,7 @@ func RenderProfilePage(c *gin.Context) {
         zap.NewLogger().Error("error", "Failed to get user")
         return
     }
+    zap.NewLogger().Info("data", userData)
 
     if err := handlers.Render(
         c, userComponents.ProfilePage(

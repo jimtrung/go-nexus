@@ -5,6 +5,7 @@ import (
 
 	"github.com/jimtrung/go-nexus/internal/domain/models"
 	"github.com/jimtrung/go-nexus/internal/infra/db"
+	"github.com/jimtrung/go-nexus/internal/infra/logger/zap"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -21,7 +22,7 @@ func GetUserByUsername(username string) (models.User, error) {
     var res models.User
 
     result := db.DB.Select(
-        "username", "email", "created_at",
+        "user_id", "username", "email", "role", "verified", "created_at", "updated_at",
     ).Where("username = ?", username).Find(&res)
     if result.Error != nil {
         return res, fmt.Errorf("Cannot find user with email %s", username)
