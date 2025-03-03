@@ -10,6 +10,18 @@ const (
 	Client    Role = "client"
 )
 
+func (r Role) String() string {
+    switch r {
+        case Admin:
+            return "admin"
+        case Moderator:
+            return "admin"
+        case Client:
+            return "admin"
+    }
+    return ""
+}
+
 type User struct {
 	UserID    uint      `gorm:"primaryKey;autoIncrement" json:"user_id"`
 	Username  string    `gorm:"type:varchar(30);not null;unique" json:"username"`

@@ -31,7 +31,7 @@ func SecurityContent() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"bg-white p-6 rounded-lg shadow-lg w-full max-w-xl\"><h2 class=\"text-2xl font-semibold\">Security</h2><form hx-post=\"/security/change-password\"><label class=\"block text-sm font-medium mt-3\">Current Password</label> <input type=\"password\" name=\"current_password\" class=\"w-full border rounded-md p-2 mt-1\" required> <label class=\"block text-sm font-medium mt-3\">New Password</label> <input type=\"password\" name=\"new_password\" class=\"w-full border rounded-md p-2 mt-1\" required> <button type=\"submit\" class=\"mt-4 w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700 transition\">Change Password</button></form></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"bg-white p-6 rounded-lg shadow-lg w-full max-w-xl\"><h2 class=\"text-2xl font-semibold\">Security</h2><h3 class=\"mt-4 text-lg font-medium\">Recent Logins</h3><ul class=\"mt-2 text-gray-600\"><li>📍 New York, USA - 2025-03-03 14:05</li><li>📍 Tokyo, Japan - 2025-03-01 22:15</li><li>📍 London, UK - 2025-02-28 08:45</li></ul><h3 class=\"mt-4 text-lg font-medium\">Active Sessions</h3><ul class=\"mt-2\"><li class=\"flex justify-between items-center py-2\"><span>Chrome - Windows 10</span> <button class=\"text-red-500 hover:underline\">Log Out</button></li><li class=\"flex justify-between items-center py-2\"><span>Safari - iPhone 13</span> <button class=\"text-red-500 hover:underline\">Log Out</button></li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

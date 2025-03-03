@@ -31,7 +31,33 @@ func EditProfileContent(user models.User) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"bg-white p-6 rounded-lg shadow-lg w-full max-w-xl\"><h2 class=\"text-2xl font-semibold\">Edit Profile</h2><form hx-post=\"/profile/update\" hx-target=\"#profile-content\"><label class=\"block text-sm font-medium\">Username</label> <input type=\"text\" name=\"username\" value=\"{ user.Username }\" class=\"w-full border rounded-md p-2 mt-1\" required> <label class=\"block text-sm font-medium mt-3\">Email</label> <input type=\"email\" name=\"email\" value=\"{ user.Email }\" class=\"w-full border rounded-md p-2 mt-1\" required> <button type=\"submit\" class=\"mt-4 w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700 transition\">Save Changes</button></form></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"bg-white p-6 rounded-lg shadow-lg w-full max-w-xl\"><h2 class=\"text-2xl font-semibold\">Edit Profile</h2><form hx-post=\"/profile/update\" hx-target=\"#profile-content\"><label class=\"block text-sm font-medium\">Username</label> <input type=\"text\" name=\"username\" value=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var2 string
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(user.Username)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/user/edit_profile.templ`, Line: 10, Col: 68}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" class=\"w-full border rounded-md p-2 mt-1\" required> <label class=\"block text-sm font-medium mt-3\">Email</label> <input type=\"email\" name=\"email\" value=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var3 string
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(user.Email)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/user/edit_profile.templ`, Line: 14, Col: 63}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" class=\"w-full border rounded-md p-2 mt-1\" required> <button type=\"submit\" class=\"mt-4 w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700 transition\">Save Changes</button></form></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -55,9 +81,9 @@ func EditProfilePageView(user models.User) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var2 == nil {
-			templ_7745c5c3_Var2 = templ.NopComponent
+		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var4 == nil {
+			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = ProfilePage(user, EditProfileContent(user)).Render(ctx, templ_7745c5c3_Buffer)

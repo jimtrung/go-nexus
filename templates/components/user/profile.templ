@@ -3,12 +3,55 @@ package user
 import "github.com/jimtrung/go-nexus/internal/domain/models"
 
 templ ProfileContent(user models.User) {
-    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl">
-        <h2 class="text-2xl font-semibold">Profile</h2>
-        <p class="text-gray-600">{ user.Username }</p>
-        <p class="text-gray-600">{ user.Email }</p>
-        <p class="text-gray-600"> ✅ Verified </p>
-        <p class="text-gray-500">Joined: { user.CreatedAt.Format("Jan 02, 2006") }</p>
+    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-2xl">
+        <div class="flex items-center space-x-6">
+            <img src="../../../static/img/facebook-logo.png"
+                class="w-24 h-24 rounded-full border border-gray-300 object-cover shadow-md" alt="Profile Picture" />
+            <div>
+                <h2 class="text-2xl font-semibold">{ user.Username }</h2>
+                <p class="text-gray-500">{ user.Email }</p>
+                <span class="text-sm font-medium px-2 py-1 rounded-full">
+                    if user.Verified {
+                        <span>✅ Verified</span>
+                    } else {
+                        <span>❌ Not Verified</span>
+                    }
+                </span>
+            </div>
+        </div>
+        <div class="mt-6 border-t pt-4 space-y-3 text-gray-600">
+            <p class="flex items-center">
+                🗓️ Joined: { user.CreatedAt.Format("2006-01-02") }
+            </p>
+            <p class="flex items-center">
+                📍 Location: Not set
+            </p>
+            <p class="flex items-center">
+                🎭 Role: { user.Role.String() }
+            </p>
+            <p class="flex items-center">
+                📜 Bio: No bio available
+            </p>
+        </div>
+        <div class="mt-6 flex space-x-4">
+            <a href="/p/user/profile/edit"
+                class="flex-1 text-center py-2 bg-blue-600 text-white
+                font-semibold rounded-md hover:bg-blue-700 transition">
+                ✏️ Edit Profile
+            </a>
+            <a href="/p/preferences"
+                class="flex-1 text-center py-2 bg-gray-600 text-white
+                font-semibold rounded-md hover:bg-gray-700 transition">
+                ⚙️ Preferences
+            </a>
+        </div>
+        <div class="mt-6 flex space-x-4">
+            <a href="/p/security"
+                class="flex-1 text-center py-2 bg-red-600 text-white
+                font-semibold rounded-md hover:bg-red-700 transition">
+                🔒 Security Settings
+            </a>
+        </div>
     </div>
 }
 
