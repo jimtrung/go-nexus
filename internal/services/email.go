@@ -54,7 +54,6 @@ func ResetPasswordEmail(email, token string) error {
 	message := []byte(fmt.Sprintf("Subject: Reset Password\n\nClick here to reset your password: http://127.0.0.1:8080/p/user/reset-password/%s",
         token,
     ))
-    fmt.Println("email sent")
 
 	return smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, message)
 }

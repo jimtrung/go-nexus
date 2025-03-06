@@ -2,10 +2,10 @@ package main
 
 import (
 	"github.com/jimtrung/go-nexus/internal/api"
-	authHandlers "github.com/jimtrung/go-nexus/internal/api/handlers/auth"
 	"github.com/jimtrung/go-nexus/internal/infra/db"
 	"github.com/jimtrung/go-nexus/internal/infra/env"
 	"github.com/jimtrung/go-nexus/internal/infra/logger/zap"
+	"github.com/jimtrung/go-nexus/internal/middleware"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 	}
 
 	database := db.ConnectToDatabase()
-    authHandlers.NewOAuth()
+    middleware.NewOAuth()
 	server := api.NewServer("debug")
 
 	port, err := env.GetPort()

@@ -16,6 +16,6 @@ type User struct {
 
 type ResetPassword struct {
 	Token           string `gorm:"type:varchar(50);default:''" json:"token"`
-	Password        string `gorm:"type:varchar(100);not null" json:"-"`
-	ConfirmPassword string `json:"-"`
+	Password        string `gorm:"type:varchar(100);not null" json:"password"`
+	ConfirmPassword string `json:"confirm_password"`
 }

@@ -12,13 +12,17 @@ import (
 	userComponents "github.com/jimtrung/go-nexus/templates/components/user"
 )
 
+var logger = zap.NewLogger()
+
 func RenderSignupPage(c *gin.Context) {
     if err := handlers.Render(c, userComponents.Signup()); err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{
             "error": "Failed to render the page",
         })
-        zap.NewLogger().Error("error", err.Error())
+        logger.Error("Failed to render the page", err.Error())
+        return
     }
+    logger.Info("Signup page rendered successfully")
 }
 
 func RenderLoginPage(c *gin.Context) {
@@ -26,29 +30,30 @@ func RenderLoginPage(c *gin.Context) {
         c.JSON(http.StatusInternalServerError, gin.H{
             "error": "Failed to render the page",
         })
-        zap.NewLogger().Error("error", err.Error())
+        logger.Error("Failed to render the page", err.Error())
+        return
     }
+    logger.Info("Login page rendered successfully")
 }
 
 func RenderProfilePage(c *gin.Context) {
     data, exists := c.Get("username")
     if !exists {
-        zap.NewLogger().Error("error", "Username has not been set")
+        logger.Error("User name has not been set")
         return
     }
 
     username := data.(string)
     if username != data.(string) {
-        zap.NewLogger().Error("error", "Wrong data type")
+        logger.Error("Wrong data type")
         return
     }
 
     userData, err := services.GetUserByUsername(username)
     if err != nil {
-        zap.NewLogger().Error("error", "Failed to get user")
+        logger.Error("Failed to get user", err.Error())
         return
     }
-    zap.NewLogger().Info("data", userData)
 
     if err := handlers.Render(
         c, userComponents.ProfilePage(
@@ -57,8 +62,10 @@ func RenderProfilePage(c *gin.Context) {
         c.JSON(http.StatusInternalServerError, gin.H{
             "error": "Failed to render the page",
         })
-        zap.NewLogger().Error("error", err.Error())
+        logger.Error("Failed to render the page", err.Error())
+        return
     }
+    logger.Info("Profile page rendered successfully")
 }
 
 func RenderForgotPasswordPage(c *gin.Context) {
@@ -66,8 +73,10 @@ func RenderForgotPasswordPage(c *gin.Context) {
         c.JSON(http.StatusInternalServerError, gin.H{
             "error": "Failed to render the page",
         })
-        zap.NewLogger().Error("error", err.Error())
+        logger.Error("Failed to render the page", err.Error())
+        return
     }
+    logger.Info("Forgot password page rendered successfully")
 }
 
 func RenderVerifyPage(c *gin.Context) {
@@ -75,7 +84,8 @@ func RenderVerifyPage(c *gin.Context) {
         c.JSON(http.StatusInternalServerError, gin.H{
             "error": "Failed to render the page",
         })
-        zap.NewLogger().Error("error", err.Error())
+        logger.Error("Failed to render the page", err.Error())
+        return
     }
 
     token := c.Param("token")
@@ -85,6 +95,7 @@ func RenderVerifyPage(c *gin.Context) {
         })
         return
     }
+    logger.Info("Verify page rendered successfully")
 }
 
 func RenderResetPasswordPage(c *gin.Context) {
@@ -92,8 +103,10 @@ func RenderResetPasswordPage(c *gin.Context) {
         c.JSON(http.StatusInternalServerError, gin.H{
             "error": "Failed to render the page",
         })
-        zap.NewLogger().Error("error", err.Error())
+        logger.Error("Failed to render the page", err.Error())
+        return
     }
+    logger.Info("Verify page rendered successfully")
 }
 
 func RenderEditProfilePage(c *gin.Context) {
@@ -101,11 +114,10 @@ func RenderEditProfilePage(c *gin.Context) {
         c, userComponents.ProfilePage(
             models.User{}, userComponents.EditProfileContent(models.User{})),
         ); err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{
-            "error": "Failed to render the page",
-        })
-        zap.NewLogger().Error("error", err.Error())
+        logger.Error("Failed to render the page", err.Error())
+        return
     }
+    logger.Info("Edit profile page rendered successfully")
 }
 
 func RenderSecurityPage(c *gin.Context) {
@@ -116,8 +128,10 @@ func RenderSecurityPage(c *gin.Context) {
         c.JSON(http.StatusInternalServerError, gin.H{
             "error": "Failed to render the page",
         })
-        zap.NewLogger().Error("error", err.Error())
+        logger.Error("Failed to render the page", err.Error())
+        return
     }
+    logger.Info("Security page rendered successfully")
 }
 
 func RenderPreferencesPage(c *gin.Context) {
@@ -128,6 +142,8 @@ func RenderPreferencesPage(c *gin.Context) {
         c.JSON(http.StatusInternalServerError, gin.H{
             "error": "Failed to render the page",
         })
-        zap.NewLogger().Error("error", err.Error())
+        logger.Error("Failed to render the page", err.Error())
+        return
     }
+    logger.Info("Preferences page rendered successfully")
 }
