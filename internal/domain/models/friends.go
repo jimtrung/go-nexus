@@ -8,4 +8,5 @@ type Friend struct {
 	ReceiverID uint      `gorm:"not null" json:"receiver_id"`
 	Status     Status    `gorm:"type:varchar(20);default:'pending'" json:"status"`
 	CreatedAt  time.Time `gorm:"type:timestamptz;autoCreateTime" json:"created_at"`
+	UpdatedAt  time.Time `gorm:"type:timestamptz;autoCreateTime" json:"updated_at"`
 }

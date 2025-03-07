@@ -20,6 +20,11 @@ func SetupPagesRoutes(r *Routes) {
             user.GET("/security", pagesHandlers.RenderSecurityPage)
         }
         p.GET("/preferences", pagesHandlers.RenderPreferencesPage)
+
+        friends := p.Group("/friends")
+        {
+            friends.GET("/show")
+        }
     }
 
     r.Router.Static("/static", "./static")

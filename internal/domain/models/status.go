@@ -8,8 +8,8 @@ import (
 type Status string
 
 const (
-	Accepted Status  = "accepted"
-	Pending  Status  = "pending"
+	Accepted Status = "accepted"
+	Pending  Status = "pending"
 	Rejected Status = "rejected"
 )
 

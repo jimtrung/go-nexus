@@ -1,0 +1,58 @@
+package user
+
+import "github.com/jimtrung/go-nexus/templates/layout"
+
+templ Show() {
+	@layout.Base("All Users") {
+		<div
+			class="group flex justify-center items-center min-h-screen
+            bg-gray-100 text-gray-900 transition-colors duration-300"
+		>
+			<form
+				hx-post="/friends/request"
+				hx-trigger="submit"
+				hx-target="#request-response"
+				hx-swap="innerHTML"
+				hx-ext="json-enc"
+				class="flex flex-col gap-4 p-6 bg-white shadow-lg rounded-lg
+                w-96"
+			>
+				<h2 class="text-2xl font-semibold text-center">Send Friend Request</h2>
+				<label for="receiver-id" class="font-medium">UserId</label>
+				<input
+					class="border border-gray-300 bg-gray-100 rounded-md px-3
+                    py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+					type="text"
+					id="username"
+					name="username"
+					autocomplete="off"
+					required
+				/>
+				<div id="request-response"></div>
+				<button
+					type="submit"
+					class="mt-4 bg-blue-600 text-white font-semibold py-2
+                    rounded-md hover:bg-blue-700 transition duration-200 w-full"
+				>
+					Send friend request
+				</button>
+			</form>
+		</div>
+		<script>
+            document.body.addEventListener("htmx:afterRequest", function (event) {
+                let responseDiv = document.querySelector("#login-response");
+
+                if (!event.detail.successful) {
+                    if (event.detail.xhr.status === 400 || event.detail.xhr.status === 500) {
+                        let errorMessage = event.detail.xhr.responseText;
+                        responseDiv.innerHTML = `<p class="text-red-500">${errorMessage}</p>`;
+                    } else {
+                        let errorMessage = event.detail.xhr.responseText;
+                        responseDiv.innerHTML = `<p class="text-red-500">${errorMessage}</p>`;
+                    }
+                }
+            });
+        </script>
+	}
+}
+
