@@ -39,7 +39,7 @@ func RenderLoginPage(c *gin.Context) {
 func RenderProfilePage(c *gin.Context) {
     data, exists := c.Get("username")
     if !exists {
-        logger.Error("User name has not been set")
+        logger.Error("Username has not been set")
         return
     }
 

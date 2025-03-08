@@ -1,6 +1,7 @@
 package friends
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -35,6 +36,7 @@ func AcceptFriendRequest(c *gin.Context) {
         logger.Error(err.Error())
         return
     }
+    fmt.Println(data)
 
     if err := services.AcceptFriendRequest(data); err != nil {
         c.String(http.StatusInternalServerError, err.Error())

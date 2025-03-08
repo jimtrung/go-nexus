@@ -76,27 +76,37 @@ AND status = ?`,
     return nil
 }
 
-func GetFriends(userID uint) ([]models.Friend, error) {
-    var friends []models.Friend
-    result := db.DB.Where(
-        "(sender_id = ? OR receiver_id = ?) AND status = ?",
-        userID, userID, "accepted",
+func GetFriends(userID uint) ([]models.FriendData, error) {
+    var friends []models.FriendData
+    result := db.DB.Raw(`
+SELECT users.username, users.user_id
+FROM users
+LEFT JOIN friends
+ON users.user_id = friends.sender_id OR users.user_id = friends.receiver_id
+WHERE users.user_id != ? AND status = ? AND (sender_id = ? OR receiver_id = ?)
+GROUP BY users.username, users.user_id`,
+    userID, "accepted", userID, userID,
     ).Find(&friends)
     if result.Error != nil {
-        return []models.Friend{}, result.Error
+        return []models.FriendData{}, result.Error
     }
 
     return friends, nil
 }
 
-func PendingRequests(userID uint) ([]models.Friend, error) {
-    var friends []models.Friend
-    result := db.DB.Where(
-        "receiver_id = ? AND status = ?",
-        userID, "pending",
+func PendingRequests(userID uint) ([]models.FriendData, error) {
+    var friends []models.FriendData
+    result := db.DB.Raw(`
+SELECT users.username, users.user_id
+FROM users
+LEFT JOIN friends
+ON users.user_id = friends.sender_id OR users.user_id = friends.receiver_id
+WHERE users.user_id != ? AND status = ? AND (sender_id = ? OR receiver_id = ?)
+GROUP BY users.username, users.user_id`,
+    userID, "pending", userID, userID,
     ).Find(&friends)
     if result.Error != nil {
-        return []models.Friend{}, result.Error
+        return []models.FriendData{}, result.Error
     }
 
     return friends, nil
