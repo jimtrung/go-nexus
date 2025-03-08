@@ -99,7 +99,7 @@ func Show(friends []models.FriendData, requests []models.FriendData) templ.Compo
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</span><div class=\"flex space-x-2\"><form hx-post=\"/friends/accept\" hx-trigger=\"submit\" hx-target=\"#response\" hx-swap=\"innerHTML\" hx-ext=\"json-enc\"><input type=\"hidden\" name=\"receiver_id\" value=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</span><div class=\"flex space-x-2\"><form onsubmit=\"sendJson(event, &#39;/friends/accept&#39;)\" class=\"inline\"><input type=\"hidden\" name=\"receiver_id\" value=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -112,7 +112,7 @@ func Show(friends []models.FriendData, requests []models.FriendData) templ.Compo
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\"> <button type=\"submit\" class=\"text-green-500 hover:underline\">Accept</button></form><form hx-post=\"/friends/reject\" hx-trigger=\"submit\" hx-target=\"#response\" hx-swap=\"innerHTML\" hx-ext=\"json-enc\"><input type=\"hidden\" name=\"receiver_id\" value=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\" class=\"receiver-id\"> <button type=\"submit\" class=\"text-green-500 hover:underline\">Accept</button></form><form onsubmit=\"sendJson(event, &#39;/friends/reject&#39;)\" class=\"inline\"><input type=\"hidden\" name=\"receiver_id\" value=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -125,12 +125,12 @@ func Show(friends []models.FriendData, requests []models.FriendData) templ.Compo
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\"> <button type=\"submit\" class=\"text-red-500 hover:underline\">Reject</button></form></div></li>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" class=\"receiver-id\"> <button type=\"submit\" class=\"text-red-500 hover:underline\">Reject</button></form></div></li>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</ul></div><div class=\"w-full max-w-md bg-white shadow-lg rounded-lg p-6 mt-6\"><h2 class=\"text-xl font-semibold mb-4\">Send Friend Request</h2><form hx-post=\"/friends/request\" hx-trigger=\"submit\" hx-target=\"#request-response\" hx-swap=\"innerHTML\" class=\"flex flex-col space-y-4\"><label for=\"receiver-id\" class=\"font-medium\">User ID</label> <input id=\"receiver-id\" name=\"receiver_id\" type=\"text\" required class=\"border border-gray-300 bg-gray-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500\"> <button type=\"submit\" class=\"bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 transition duration-200 w-full\">Send Request</button></form><div id=\"request-response\"></div></div><div id=\"response\"></div></div><script>\n            document.body.addEventListener(\"htmx:afterRequest\", function (event) {\n                let responseDiv = document.querySelector(\"#response\");\n\n                if (!event.detail.successful) {\n                    responseDiv.innerHTML = `<p class=\"text-red-500\">${event.detail.xhr.responseText}</p>`;\n                } else {\n                    if (event.detail.elt.closest(\"li\")) {\n                        event.detail.elt.closest(\"li\").remove();\n                    }\n                }\n            });\n        </script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</ul></div><div class=\"w-full max-w-md bg-white shadow-lg rounded-lg p-6 mt-6\"><h2 class=\"text-xl font-semibold mb-4\">Send Friend Request</h2><form onsubmit=\"sendJson(event, &#39;/friends/request&#39;)\" class=\"flex flex-col space-y-4\"><label for=\"receiver-id\" class=\"font-medium\">User ID</label> <input id=\"receiver-id\" name=\"receiver_id\" type=\"text\" required class=\"border border-gray-300 bg-gray-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500\"> <button type=\"submit\" class=\"bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 transition duration-200 w-full\">Send Request</button></form><div id=\"request-response\"></div></div><div id=\"response\"></div></div><script>\n            function sendJson(event, url) {\n                event.preventDefault();\n                let form = event.target;\n                let input = form.querySelector(\".receiver-id, #receiver-id\");\n                let value = parseInt(input.value, 10);\n\n                if (isNaN(value)) {\n                    alert(\"Invalid receiver ID\");\n                    return;\n                }\n\n                fetch(url, {\n                    method: \"POST\",\n                    headers: { \"Content-Type\": \"application/json\" },\n                    body: JSON.stringify({ receiver_id: value })\n                })\n                .then(response => response.text())\n                .then(data => {\n                    document.querySelector(\"#response\").innerHTML = `<p class=\"text-green-500\">${data}</p>`;\n                })\n                .catch(error => console.error(\"Error:\", error));\n            }\n\n            document.body.addEventListener(\"htmx:afterRequest\", function (event) {\n                let responseDiv = document.querySelector(\"#response\");\n\n                if (!event.detail.successful) {\n                    responseDiv.innerHTML = `<p class=\"text-red-500\">${event.detail.xhr.responseText}</p>`;\n                } else {\n                    if (event.detail.elt.closest(\"li\")) {\n                        event.detail.elt.closest(\"li\").remove();\n                    }\n                }\n            });\n        </script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

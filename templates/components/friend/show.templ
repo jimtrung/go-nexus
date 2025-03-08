@@ -34,12 +34,12 @@ templ Show(friends []models.FriendData, requests []models.FriendData) {
 						<li class="flex justify-between items-center border-b py-2">
 							<span>{request.Username}</span>
 							<div class="flex space-x-2">
-								<form hx-post="/friends/accept" hx-trigger="submit" hx-target="#response" hx-swap="innerHTML" hx-ext="json-enc">
-									<input type="hidden" name="receiver_id" value={strconv.Itoa(int(request.UserID))} />
+								<form onsubmit="sendJson(event, '/friends/accept')" class="inline">
+									<input type="hidden" name="receiver_id" value={strconv.Itoa(int(request.UserID))} class="receiver-id" />
 									<button type="submit" class="text-green-500 hover:underline">Accept</button>
 								</form>
-								<form hx-post="/friends/reject" hx-trigger="submit" hx-target="#response" hx-swap="innerHTML" hx-ext="json-enc">
-									<input type="hidden" name="receiver_id" value={strconv.Itoa(int(request.UserID))} />
+								<form onsubmit="sendJson(event, '/friends/reject')" class="inline">
+									<input type="hidden" name="receiver_id" value={strconv.Itoa(int(request.UserID))} class="receiver-id" />
 									<button type="submit" class="text-red-500 hover:underline">Reject</button>
 								</form>
 							</div>
@@ -50,7 +50,7 @@ templ Show(friends []models.FriendData, requests []models.FriendData) {
 
 			<div class="w-full max-w-md bg-white shadow-lg rounded-lg p-6 mt-6">
 				<h2 class="text-xl font-semibold mb-4">Send Friend Request</h2>
-				<form hx-post="/friends/request" hx-trigger="submit" hx-target="#request-response" hx-swap="innerHTML" class="flex flex-col space-y-4">
+				<form onsubmit="sendJson(event, '/friends/request')" class="flex flex-col space-y-4">
 					<label for="receiver-id" class="font-medium">User ID</label>
 					<input id="receiver-id" name="receiver_id" type="text" required
 					       class="border border-gray-300 bg-gray-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
@@ -64,6 +64,29 @@ templ Show(friends []models.FriendData, requests []models.FriendData) {
 			<div id="response"></div>
 		</div>
 		<script>
+            function sendJson(event, url) {
+                event.preventDefault();
+                let form = event.target;
+                let input = form.querySelector(".receiver-id, #receiver-id");
+                let value = parseInt(input.value, 10);
+
+                if (isNaN(value)) {
+                    alert("Invalid receiver ID");
+                    return;
+                }
+
+                fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ receiver_id: value })
+                })
+                .then(response => response.text())
+                .then(data => {
+                    document.querySelector("#response").innerHTML = `<p class="text-green-500">${data}</p>`;
+                })
+                .catch(error => console.error("Error:", error));
+            }
+
             document.body.addEventListener("htmx:afterRequest", function (event) {
                 let responseDiv = document.querySelector("#response");
 
