@@ -23,7 +23,7 @@ func SetupPagesRoutes(r *Routes) {
 
         friends := p.Group("/friends")
         {
-            friends.GET("/show")
+            friends.GET("/show", pagesHandlers.RenderShowPage)
         }
     }
 

@@ -20,5 +20,8 @@ migrate-down:
 migrate-force:
 	$(MIGRATE_CMD) force $(VERSION)
 
+migrate-new:
+	migrate create -ext sql -dir migrations -seq ${MIGRATION_NAME}
+
 lines:
 	 find . -type f \( -name "*.go" -o -name "*.templ" \) -print0 | xargs -0 wc -l

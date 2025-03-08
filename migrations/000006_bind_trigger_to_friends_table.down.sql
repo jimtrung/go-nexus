@@ -1,0 +1,1 @@
+DROP TRIGGER trigger_accept_mutual_requests;
