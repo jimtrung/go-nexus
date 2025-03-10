@@ -57,7 +57,7 @@ func EditProfileContent(user models.User) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" class=\"w-full border rounded-md p-2 mt-1\" required> <button type=\"submit\" class=\"mt-4 w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700 transition\">Save Changes</button></form></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" class=\"w-full border rounded-md p-2 mt-1\" required> <button type=\"submit\" class=\"mt-4 w-full bg-blue-600 text-white font-semibold py-2\n                px-4 rounded-md hover:bg-blue-700 transition\">Save Changes</button></form></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

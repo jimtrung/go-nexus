@@ -3,92 +3,87 @@ package user
 import "github.com/jimtrung/go-nexus/templates/layout"
 
 templ Login() {
-	@layout.Base("Log In") {
-		<div
-			class="group flex justify-center items-center min-h-screen
-            bg-gray-100 text-gray-900 transition-colors duration-300"
-		>
-			<form
-				hx-post="/auth/login"
-				hx-trigger="submit"
-				hx-target="#login-response"
-				hx-swap="innerHTML"
-				hx-ext="json-enc"
-				class="flex flex-col gap-4 p-6 bg-white shadow-lg rounded-lg
-                w-96"
-			>
-				<h2 class="text-2xl font-semibold text-center">Log In</h2>
-				<label for="username" class="font-medium">Username</label>
-				<input
-					class="border border-gray-300 bg-gray-100 rounded-md px-3
-                    py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-					type="text"
-					id="username"
-					name="username"
-					autocomplete="off"
-					required
-				/>
-				<label for="password" class="font-medium">Password</label>
-				<input
-					class="border border-gray-300 bg-gray-100 rounded-md px-3
-                    py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-					type="password"
-					id="password"
-					name="password"
-					autocomplete="off"
-					required
-				/>
-				<div id="login-response"></div>
-				<button
-					type="submit"
-					class="mt-4 bg-blue-600 text-white font-semibold py-2
-                    rounded-md hover:bg-blue-700 transition duration-200 w-full"
-				>
-					Log In
-				</button>
-				<div class="flex justify-between mt-4 text-sm">
-					<a href="/p/user/signup" class="text-blue-600 hover:underline">
-						Don't have an account? Sign up
-					</a>
-					<a href="/p/user/forgot-password" class="text-blue-600 hover:underline">
-						Forgot password?
-					</a>
-				</div>
-				<div class="flex justify-between mt-4 gap-2">
-					<a
-						href="/auth/google"
-						class="flex items-center justify-center w-full py-2 bg-white
-                   border border-gray-300 rounded-md shadow-sm hover:bg-gray-200
-                   transition"
-					>
-						<img src="/static/img/google-logo.png" class="w-6 h-6 mr-2" alt="Google Logo"/>
-						<span class="text-gray-700">Google</span>
-					</a>
-					<a
-						href="/auth/facebook"
-						class="flex items-center justify-center w-full py-2 bg-blue-600
-                   text-white rounded-md shadow-sm hover:bg-blue-700 transition"
-					>
-						<img src="/static/img/facebook-logo.png" class="w-6 h-6 mr-2" alt="Facebook Logo"/>
-						<span>Facebook</span>
-					</a>
-				</div>
-			</form>
-		</div>
-		<script>
-            document.body.addEventListener("htmx:afterRequest", function (event) {
-                let responseDiv = document.querySelector("#login-response");
+    @layout.Base("Log In") {
+        <div class="group flex justify-center items-center min-h-screen
+                    bg-gray-100 text-gray-900 transition-colors
+                    duration-300">
+            <form hx-post="/auth/login" hx-trigger="submit"
+                  hx-target="#login-response" hx-swap="innerHTML"
+                  hx-ext="json-enc"
+                  class="flex flex-col gap-4 p-6 bg-white shadow-lg
+                         rounded-lg w-70">
+                <h2 class="text-2xl font-semibold text-center">Log In</h2>
 
+                <label for="username" class="font-medium">Username</label>
+                <input class="border border-gray-300 bg-gray-100 rounded-md px-3
+                             py-2 focus:outline-none focus:ring-2
+                             focus:ring-blue-500"
+                    type="text" id="username" name="username"
+                    autocomplete="off" required />
+
+                <label for="password" class="font-medium">Password</label>
+                <input class="border border-gray-300 bg-gray-100 rounded-md px-3
+                             py-2 focus:outline-none focus:ring-2
+                             focus:ring-blue-500"
+                    type="password" id="password" name="password"
+                    autocomplete="off" required />
+
+                <div id="login-response"></div>
+
+                <button type="submit"
+                    class="mt-4 bg-blue-600 text-white font-semibold py-2
+                           rounded-md hover:bg-blue-700 transition
+                           duration-200 w-full">
+                    Log In
+                </button>
+
+                <div class="flex justify-between mt-4 text-sm">
+                    <a href="/p/user/signup" class="text-blue-600 hover:underline">
+                        Don't have an account? Sign up
+                    </a>
+                    <a href="/p/user/forgot-password" class="text-blue-600 hover:underline">
+                        Forgot password?
+                    </a>
+                </div>
+
+                <div class="flex justify-between mt-4 gap-2">
+                    <a href="/auth/google"
+                        class="flex items-center justify-center w-full py-2
+                               bg-white border border-gray-300 rounded-md
+                               shadow-sm hover:bg-gray-200 transition">
+                        <img src="/static/img/google-logo.png"
+                             class="w-6 h-6 mr-2" alt="Google Logo" />
+                        <span class="text-gray-700">Google</span>
+                    </a>
+
+                    <a href="/auth/facebook"
+                        class="flex items-center justify-center w-full py-2
+                               bg-blue-600 text-white rounded-md shadow-sm
+                               hover:bg-blue-700 transition">
+                        <img src="/static/img/facebook-logo.png"
+                             class="w-6 h-6 mr-2" alt="Facebook Logo" />
+                        <span>Facebook</span>
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <script>
+            document.body.addEventListener("htmx:afterRequest", (event) => {
+                let responseDiv = document.querySelector("#login-response");
                 if (!event.detail.successful) {
-                    if (event.detail.xhr.status === 400 || event.detail.xhr.status === 500) {
-                        let errorMessage = event.detail.xhr.responseText;
-                        responseDiv.innerHTML = `<p class="text-red-500">${errorMessage}</p>`;
+                    let { status, responseText } = event.detail.xhr;
+                    if (status === 400 || status === 500) {
+                        responseDiv.innerHTML =
+                            `<p class="text-red-500">${responseText}</p>`;
                     } else {
-                        let errorMessage = event.detail.xhr.responseText;
-                        responseDiv.innerHTML = `<p class="text-red-500">${errorMessage}</p>`;
+                        responseDiv.innerHTML =
+                            `<p class="text-red-500">
+                                An unexpected error occurred.
+                            </p>`;
                     }
                 }
             });
         </script>
-	}
+    }
 }
