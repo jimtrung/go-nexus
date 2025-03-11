@@ -32,7 +32,7 @@ func PreferencesContent() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"bg-white p-6 rounded-lg shadow-lg w-full max-w-xl\"><h2 class=\"text-2xl font-semibold\">Preferences</h2><label class=\"flex items-center mt-3\"><input type=\"checkbox\" name=\"dark_mode\" class=\"mr-2\"> Dark Mode</label> <label class=\"flex items-center mt-3\"><input type=\"checkbox\" name=\"notifications\" class=\"mr-2\"> Enable Notifications</label> <button type=\"submit\" class=\"mt-4 w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-green-700 transition\">Save Preferences</button></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"bg-white p-6 rounded-lg shadow-lg w-full max-w-xl\"><h2 class=\"text-2xl font-semibold\">Preferences</h2><label class=\"flex items-center mt-3\"><input type=\"checkbox\" name=\"dark_mode\" class=\"mr-2\"> Dark Mode</label> <label class=\"flex items-center mt-3\"><input type=\"checkbox\" name=\"notifications\" class=\"mr-2\"> Enable Notifications</label> <button type=\"submit\" class=\"mt-4 w-full bg-green-600 text-white font-semibold py-2 px-4\n            rounded-md hover:bg-green-700 transition\">Save Preferences</button></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

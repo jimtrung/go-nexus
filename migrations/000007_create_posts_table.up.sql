@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS posts (
+    post_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    content TEXT NOT NULL,
+    likes INT DEFAULT 0,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+    -- comments ?
+);

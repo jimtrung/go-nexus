@@ -1,8 +1,11 @@
 package services
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func GenerateRandomPassword() string {
@@ -15,4 +18,18 @@ func GenerateRandomPassword() string {
 		res[i] = legitChars[seededRand.Intn(len(legitChars))]
 	}
 	return string(res)
+}
+
+func GetUserID(c *gin.Context) (uint, error) {
+    rawUserID, exists := c.Get("userID")
+    if !exists {
+        return 0, fmt.Errorf("User ID not existed")
+    }
+
+    userID, ok := rawUserID.(uint)
+    if !ok {
+        return 0, fmt.Errorf("Not a valid user ID")
+    }
+
+    return userID, nil
 }
