@@ -35,3 +35,7 @@ func CreatePost(c *gin.Context) {
 
     logger.Info("Successfully added post to database")
 }
+
+func GetAllPost(c *gin.Context) {
+
+}
