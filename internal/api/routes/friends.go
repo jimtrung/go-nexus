@@ -6,13 +6,13 @@ import (
 )
 
 func SetupFriendsRoutes(r *Routes) {
-	friends := r.Router.Group("/friends")
+	friends := r.Router.Group("/friends", middleware.RequireAuth)
 	{
-        friends.GET("/", middleware.RequireAuth, friendsHandler.GetFriends)
-        friends.GET("/requests", middleware.RequireAuth, friendsHandler.GetFriendRequest)
-        friends.POST("/request", middleware.RequireAuth, friendsHandler.SendFriendRequest)
-        friends.POST("/accept", middleware.RequireAuth, friendsHandler.AcceptFriendRequest)
-        friends.POST("/reject", middleware.RequireAuth, friendsHandler.RejectFriendRequest)
-        friends.DELETE("/remove/:friend_id", middleware.RequireAuth, friendsHandler.RemoveFriend)
+        friends.GET("/", friendsHandler.GetFriends)
+        friends.GET("/requests", friendsHandler.GetFriendRequest)
+        friends.POST("/request", friendsHandler.SendFriendRequest)
+        friends.POST("/accept", friendsHandler.AcceptFriendRequest)
+        friends.POST("/reject", friendsHandler.RejectFriendRequest)
+        friends.DELETE("/remove/:friend_id", friendsHandler.RemoveFriend)
 	}
 }

@@ -1,9 +1,12 @@
 package routes
 
-import postsHandlers "github.com/jimtrung/go-nexus/internal/api/handlers/posts"
+import (
+	postsHandlers "github.com/jimtrung/go-nexus/internal/api/handlers/posts"
+	"github.com/jimtrung/go-nexus/internal/middleware"
+)
 
 func SetUpPostsRoutes(r *Routes) {
-    posts := r.Router.Group("/posts")
+    posts := r.Router.Group("/posts", middleware.RequireAuth)
     {
         posts.POST("/", postsHandlers.CreatePost)
         posts.GET("/")

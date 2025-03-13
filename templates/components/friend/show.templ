@@ -1,8 +1,8 @@
-package friends
+package friend
 
-import "github.com/jimtrung/go-nexus/templates/layout"
 import "github.com/jimtrung/go-nexus/internal/domain/models"
 import "strconv"
+import "github.com/jimtrung/go-nexus/templates/layout"
 
 templ Show(friends []models.FriendData, requests []models.FriendData) {
 	@layout.Base("Friends") {
@@ -62,7 +62,13 @@ templ Show(friends []models.FriendData, requests []models.FriendData) {
 			</div>
 
 			<div id="response"></div>
+
+			<!-- Back Button -->
+			<button onclick="history.back()" class="mt-6 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition">
+				Back
+			</button>
 		</div>
+
 		<script>
             function sendJson(event, url) {
                 event.preventDefault();
