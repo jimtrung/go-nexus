@@ -12,7 +12,4 @@ type Routes struct {
 
 func (r *Routes) SetupRoutes() {
     SetupAuthRoutes(r)
-    SetupPagesRoutes(r)
-    SetupFriendsRoutes(r)
-    SetUpPostsRoutes(r)
 }

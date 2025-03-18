@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jimtrung/go-nexus/internal/domain/models"
+	"github.com/jimtrung/go-nexus/internal/domain"
 	"github.com/jimtrung/go-nexus/internal/infra/logger/zap"
 	"github.com/jimtrung/go-nexus/internal/services"
 )
@@ -14,7 +14,7 @@ import (
 var logger = zap.NewLogger()
 
 func Signup(c *gin.Context) {
-	var req models.User
+	var req domain.User
 
 	if err := c.Bind(&req); err != nil {
 		c.String(http.StatusBadRequest, "Wrong JSON format")
@@ -59,7 +59,7 @@ func Signup(c *gin.Context) {
 }
 
 func Login(c *gin.Context) {
-	var req models.User
+	var req domain.User
 
 	if err := c.Bind(&req); err != nil {
 		c.String(http.StatusBadRequest, "Wrong JSON format")
@@ -94,7 +94,7 @@ func Logout(c *gin.Context) {
 }
 
 func ForgotPassword(c *gin.Context) {
-    var userReq models.User
+    var userReq domain.User
 
     if err := c.Bind(&userReq); err != nil {
         c.String(http.StatusBadRequest, "Wrong JSON format")
@@ -134,14 +134,13 @@ func ForgotPassword(c *gin.Context) {
 }
 
 func ResetPassword(c *gin.Context) {
-    var resetReq models.ResetPassword
+    var resetReq domain.ResetPassword
 
     if err := c.Bind(&resetReq); err != nil {
         c.String(http.StatusBadRequest, "Wrong JSON format")
         logger.Error("Wrong JSON format", err.Error())
         return
     }
-    fmt.Println(resetReq)
 
     if resetReq.Password != resetReq.ConfirmPassword {
         c.String(http.StatusInternalServerError, "Password do not match")

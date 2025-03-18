@@ -1,10 +1,10 @@
 package services
 
 import (
-	"github.com/jimtrung/go-nexus/internal/domain/models"
+	"github.com/jimtrung/go-nexus/internal/domain"
 )
 
-func SignupIfNotExist(email string) (models.User, error) {
+func SignupIfNotExist(email string) (domain.User, error) {
 	userInfo, err := GetUserByEmail(email)
 
 	if err == nil {
@@ -14,17 +14,17 @@ func SignupIfNotExist(email string) (models.User, error) {
 	randomPassword := GenerateRandomPassword()
 	hashedPassword, err := HashPassword(randomPassword)
 	if err != nil {
-		return models.User{}, err
+		return domain.User{}, err
 	}
 
-	userInfo = models.User{
+	userInfo = domain.User{
 		Username: email,
 		Email:    email,
 		Verified: true,
 		Password: hashedPassword,
 	}
     if err := InsertIntoUsers(userInfo); err != nil {
-		return models.User{}, err
+		return domain.User{}, err
     }
 
 	return userInfo, nil

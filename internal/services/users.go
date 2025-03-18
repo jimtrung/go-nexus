@@ -3,12 +3,12 @@ package services
 import (
 	"fmt"
 
-	"github.com/jimtrung/go-nexus/internal/domain/models"
+	"github.com/jimtrung/go-nexus/internal/domain"
 	"github.com/jimtrung/go-nexus/internal/infra/db"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func InsertIntoUsers(user models.User) error {
+func InsertIntoUsers(user domain.User) error {
     result := db.DB.Create(&user)
     if result.Error != nil {
         return fmt.Errorf("Username/Email is already used")
@@ -17,8 +17,8 @@ func InsertIntoUsers(user models.User) error {
     return nil
 }
 
-func GetUserByUsername(username string) (models.User, error) {
-    var res models.User
+func GetUserByUsername(username string) (domain.User, error) {
+    var res domain.User
 
     result := db.DB.Select(
         "user_id", "username", "email", "role", "verified", "created_at", "updated_at",
@@ -30,8 +30,8 @@ func GetUserByUsername(username string) (models.User, error) {
     return res, nil
 }
 
-func GetUserByEmail(email string) (models.User, error) {
-    var res models.User
+func GetUserByEmail(email string) (domain.User, error) {
+    var res domain.User
 
     result := db.DB.Select(
         "username", "email", "created_at",
@@ -52,8 +52,8 @@ func HashPassword(password string) (string, error) {
     return string(hashed), nil
 }
 
-func IsValidUser(user models.User) error {
-    var res models.User
+func IsValidUser(user domain.User) error {
+    var res domain.User
 
     result := db.DB.Select("password").Where("username = ?", user.Username).Find(&res)
     if result.RowsAffected == 0 {
