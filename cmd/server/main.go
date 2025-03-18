@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/jimtrung/go-nexus/internal/api"
 	"github.com/jimtrung/go-nexus/internal/infra/db"
 	"github.com/jimtrung/go-nexus/internal/infra/env"
@@ -19,11 +21,5 @@ func main() {
     middleware.NewOAuth()
 	server := api.NewServer("debug")
 
-	port, err := env.GetPort()
-	if err != nil {
-		logger.Error("Error getting port from .env", err)
-		return
-	}
-
-	server.StartServer(database, port)
+    server.StartServer(database, os.Getenv("PORT"))
 }

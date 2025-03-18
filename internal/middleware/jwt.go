@@ -8,7 +8,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/jimtrung/go-nexus/internal/services"
 )
 
 func RequireAuth(c *gin.Context) {
@@ -41,19 +40,12 @@ func RequireAuth(c *gin.Context) {
 		return
 	}
 
-	username, ok := claims["username"].(string)
+	userID, ok := claims["sub"].(int)
 	if !ok {
 		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
-    user, err := services.GetUserByUsername(username)
-    if err != nil {
-		c.AbortWithStatus(http.StatusUnauthorized)
-		return
-    }
-
-	c.Set("userID", user.UserID)
-    c.Set("username", username)
+    c.Set("user_id", userID)
 	c.Next()
 }

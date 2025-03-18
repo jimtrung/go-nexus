@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func GenerateRandomPassword() string {
@@ -20,16 +20,10 @@ func GenerateRandomPassword() string {
 	return string(res)
 }
 
-func GetUserID(c *gin.Context) (uint, error) {
-    rawUserID, exists := c.Get("userID")
-    if !exists {
-        return 0, fmt.Errorf("User ID not existed")
-    }
-
-    userID, ok := rawUserID.(uint)
-    if !ok {
-        return 0, fmt.Errorf("Not a valid user ID")
-    }
-
-    return userID, nil
+func HashPassword(password string) (string, error) {
+	hashed, err := bcrypt.GenerateFromPassword([]byte(password), 8)
+	if err != nil {
+		return "", fmt.Errorf("Failed to hash password")
+	}
+	return string(hashed), nil
 }

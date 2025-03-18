@@ -22,7 +22,6 @@ func NewOAuth() {
 	store.Options.Path = "/"
 	store.Options.HttpOnly = true
 	store.Options.Secure = isProd
-
 	gothic.Store = store
 
 	goth.UseProviders(

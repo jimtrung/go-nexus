@@ -29,4 +29,3 @@ func (lo Logger) Error(message string, args ...any) {
 		sugar.Error(message)
 	}
 }
-
