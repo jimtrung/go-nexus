@@ -58,11 +58,11 @@ func SendEmail(to, subject, body string) error {
 }
 
 func SendVerificationEmail(email, token string) {
-	body := fmt.Sprintf("Click here to verify: http://127.0.0.1:8080/p/user/verify/%s", token)
+	body := fmt.Sprintf("Click here to verify: http://127.0.0.1:8080/auth/verify/%s", token)
 	go SendEmail(email, "Verify Your Email", body)
 }
 
 func ResetPasswordEmail(email, token string) {
-	body := fmt.Sprintf("Click here to reset password: http://127.0.0.1:8080/p/user/reset-password/%s", token)
+	body := fmt.Sprintf("Click here to reset password: http://127.0.0.1:8080/auth/reset-password")
 	go SendEmail(email, "Reset Password", body)
 }

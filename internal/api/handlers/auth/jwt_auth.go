@@ -76,7 +76,6 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 
 func (h *AuthHandler) ForgotPassword(c *gin.Context) {
 	req := &domain.User{}
-
 	if err := c.Bind(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -101,7 +100,6 @@ func (h *AuthHandler) ForgotPassword(c *gin.Context) {
 
 func (h *AuthHandler) ResetPassword(c *gin.Context) {
 	var req domain.ResetPassword
-
 	if err := c.Bind(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Wrong JSON format",
@@ -118,7 +116,16 @@ func (h *AuthHandler) ResetPassword(c *gin.Context) {
 		return
 	}
 
-	if err := h.AuthService.AuthRepo.UpdatePassword(req.Token, req.Password); err != nil {
+    hash, err := services.HashPassword(req.Password)
+    if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+            "error": err.Error(),
+        })
+		h.Logger.Error(err.Error())
+        return
+    }
+
+	if err := h.AuthService.AuthRepo.UpdatePassword(req.Token, hash); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
             "error": err.Error(),
         })
@@ -130,4 +137,28 @@ func (h *AuthHandler) ResetPassword(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Reset password successfully",
 	})
+}
+
+func (h *AuthHandler) Verify(c *gin.Context) {
+    token := c.Param("token")
+    if token == "" {
+        c.JSON(http.StatusBadRequest, gin.H{
+            "error": "Empty token",
+        })
+        h.Logger.Error("Empty token")
+        return
+    }
+
+    if err := h.AuthService.AuthRepo.Verify(token); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "error": err.Error(),
+        })
+        h.Logger.Error(err.Error())
+        return
+    }
+
+    h.Logger.Info("User verified")
+    c.JSON(http.StatusOK, gin.H{
+        "message": "User verified",
+    })
 }

@@ -83,7 +83,7 @@ func (u *UserRepository) AddToken(email, token string) error {
 func (u *UserRepository) DeleteToken(token string) error {
     _, err := u.conn.Exec(
         context.Background(),
-        `DELETE FROM users WHERE token = $1`,
+        `UPDATE users SET token = '' WHERE token = $1`,
         token,
     )
     return err
@@ -92,7 +92,7 @@ func (u *UserRepository) DeleteToken(token string) error {
 func (u *UserRepository) Verify(token string) error {
     _, err := u.conn.Exec(
         context.Background(),
-        `UPDATE users SET verified = true, token = "" WHERE token = $1`,
+        `UPDATE users SET verified = true, token = '' WHERE token = $1`,
         token,
     )
     return err
@@ -101,9 +101,7 @@ func (u *UserRepository) Verify(token string) error {
 func (u *UserRepository) UpdatePassword(token, newPasswordHash string) error {
     _, err := u.conn.Exec(
         context.Background(),
-        `UPDATE users
-        SET token = "", password = $1
-        WHERE token = $2`,
+        `UPDATE users SET token = '', password = $1 WHERE token = $2`,
         newPasswordHash, token,
     )
     return err

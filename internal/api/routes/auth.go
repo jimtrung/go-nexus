@@ -19,7 +19,10 @@ func (r *Routes) SetupAuthRoutes(logger *zap.Logger) {
         auth.POST("/signup", authHandlers.Signup)
         auth.POST("/login", authHandlers.Login)
         auth.GET("/logout", authHandlers.Logout)
+
         auth.POST("/forgot-password", authHandlers.ForgotPassword)
         auth.POST("/reset-password", authHandlers.ResetPassword)
+
+        auth.GET("/verify/:token", authHandlers.Verify)
     }
 }
