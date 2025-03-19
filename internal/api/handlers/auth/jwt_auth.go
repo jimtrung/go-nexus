@@ -3,11 +3,9 @@ package authhandlers
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jimtrung/go-nexus/internal/domain"
-	"github.com/jimtrung/go-nexus/internal/infra/logger"
 	"github.com/jimtrung/go-nexus/internal/infra/logger/zap"
 	"github.com/jimtrung/go-nexus/internal/services"
 )
@@ -120,7 +118,7 @@ func (h *AuthHandler) ResetPassword(c *gin.Context) {
 		return
 	}
 
-	if err := h.AuthService.ResetPassword(req.Token, req.Password); err != nil {
+	if err := h.AuthService.AuthRepo.UpdatePassword(req.Token, req.Password); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
             "error": err.Error(),
         })

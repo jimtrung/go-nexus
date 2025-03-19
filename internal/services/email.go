@@ -4,16 +4,17 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
+	"log"
 	"net"
-	"net/mail"
-	"net/smtp"
 	"os"
 	"strings"
+
+	"github.com/sendgrid/sendgrid-go"
+	"github.com/sendgrid/sendgrid-go/helpers/mail"
 )
 
 func IsValidEmail(email string) bool {
-	_, err := mail.ParseAddress(email)
-	return err == nil
+    return true
 }
 
 func HasMXRecord(email string) bool {
@@ -24,36 +25,44 @@ func HasMXRecord(email string) bool {
 
 func GenerateToken() string {
 	bytes := make([]byte, 16)
-	rand.Read(bytes)
+	_, err := rand.Read(bytes)
+	if err != nil {
+		log.Println("Error generating token:", err)
+		return ""
+	}
 	return hex.EncodeToString(bytes)
 }
 
-func SendVerificationEmail(email, token string) error {
-	from := os.Getenv("EMAIL")
-	password := os.Getenv("EMAIL_PASSWORD")
-	to := []string{email}
-	smtpHost := "smtp.gmail.com"
-	smtpPort := "587"
+func SendEmail(to, subject, body string) error {
+	fromEmail := os.Getenv("EMAIL")
+	apiKey := os.Getenv("SENDGRID_API_KEY")
 
-	auth := smtp.PlainAuth("", from, password, smtpHost)
-	message := []byte(fmt.Sprintf("Subject: Verify Your Email\n\nClick here to verify: http://127.0.0.1:8080/p/user/verify/%s",
-        token,
-    ))
+	if fromEmail == "" || apiKey == "" {
+		log.Println("Missing EMAIL or SENDGRID_API_KEY environment variables")
+		return fmt.Errorf("missing email credentials")
+	}
 
-	return smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, message)
+	from := mail.NewEmail("GoNexus", fromEmail)
+	toEmail := mail.NewEmail("", to)
+	message := mail.NewSingleEmail(from, subject, toEmail, body, body)
+
+	client := sendgrid.NewSendClient(apiKey)
+	response, err := client.Send(message)
+	if err != nil {
+		log.Println("Error sending email:", err)
+		return err
+	}
+
+	log.Printf("Email sent to %s. Status Code: %d\n", to, response.StatusCode)
+	return nil
 }
 
-func ResetPasswordEmail(email, token string) error {
-	from := os.Getenv("EMAIL")
-	password := os.Getenv("EMAIL_PASSWORD")
-	to := []string{email}
-	smtpHost := "smtp.gmail.com"
-	smtpPort := "587"
+func SendVerificationEmail(email, token string) {
+	body := fmt.Sprintf("Click here to verify: http://127.0.0.1:8080/p/user/verify/%s", token)
+	go SendEmail(email, "Verify Your Email", body)
+}
 
-	auth := smtp.PlainAuth("", from, password, smtpHost)
-	message := []byte(fmt.Sprintf("Subject: Reset Password\n\nClick here to reset your password: http://127.0.0.1:8080/p/user/reset-password/%s",
-        token,
-    ))
-
-	return smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, message)
+func ResetPasswordEmail(email, token string) {
+	body := fmt.Sprintf("Click here to reset password: http://127.0.0.1:8080/p/user/reset-password/%s", token)
+	go SendEmail(email, "Reset Password", body)
 }

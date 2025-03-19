@@ -21,7 +21,7 @@ func GenerateRandomPassword() string {
 }
 
 func HashPassword(password string) (string, error) {
-	hashed, err := bcrypt.GenerateFromPassword([]byte(password), 8)
+	hashed, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
 	if err != nil {
 		return "", fmt.Errorf("Failed to hash password")
 	}

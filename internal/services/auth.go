@@ -12,7 +12,13 @@ import (
 )
 
 type AuthService struct {
-    authRepo *repository.UserRepository
+    AuthRepo *repository.UserRepository
+}
+
+func NewAuthService(repo *repository.UserRepository) *AuthService {
+    return &AuthService{
+        AuthRepo: repo,
+    }
 }
 
 func (s *AuthService) SignUp(req *domain.User) error {
@@ -29,19 +35,16 @@ func (s *AuthService) SignUp(req *domain.User) error {
 	token := GenerateToken()
     req.Token = token
 
-	if err := s.authRepo.InsertIntoUsers(req); err != nil {
+	if err := s.AuthRepo.InsertIntoUsers(req); err != nil {
         return err
 	}
 
-	err = SendVerificationEmail(req.Email, token)
-	if err != nil {
-        return err
-	}
+	SendVerificationEmail(req.Email, token)
     return nil
 }
 
 func (s *AuthService) Login(req *domain.User) (string, error) {
-    user, err := s.authRepo.GetByUsername(req.Username)
+    user, err := s.AuthRepo.GetByUsername(req.Username)
     if err != nil {
         return "", err
     }
@@ -61,17 +64,14 @@ func (s *AuthService) ForgotPassword(req *domain.User) error {
 	token := GenerateToken()
 	req.Token = token
 
-	if err := s.authRepo.AddToken(req.Email, req.Token); err != nil {
+	if err := s.AuthRepo.AddToken(req.Email, req.Token); err != nil {
         return fmt.Errorf("Failed to add token to user: %v", err)
 	}
 
-	if err := ResetPasswordEmail(req.Email, req.Token); err != nil {
-        return fmt.Errorf("Failed to send reset email to user")
-	}
-
+	ResetPasswordEmail(req.Email, req.Token)
 	go func() {
 		time.Sleep(time.Second * 300)
-		s.authRepo.DeleteToken(req.Token)
+		s.AuthRepo.DeleteToken(req.Token)
 	}()
     return nil
 }
@@ -91,7 +91,7 @@ func (s *AuthService) CreateSignedToken(username string) (string, error) {
 }
 
 func (s *AuthService) SignupIfNotExist(email string) (*domain.User, error) {
-	userInfo, err := s.authRepo.GetByEmail(email)
+	userInfo, err := s.AuthRepo.GetByEmail(email)
 	if err == nil {
 		return userInfo, nil
 	}
@@ -108,7 +108,7 @@ func (s *AuthService) SignupIfNotExist(email string) (*domain.User, error) {
 		Verified: true,
 		Password: hashedPassword,
 	}
-    if err := s.authRepo.InsertIntoUsers(userInfo); err != nil {
+    if err := s.AuthRepo.InsertIntoUsers(userInfo); err != nil {
 		return &domain.User{}, err
     }
 

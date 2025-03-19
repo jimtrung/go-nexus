@@ -12,10 +12,18 @@ type UserRepository struct {
     conn *pgx.Conn
 }
 
+func NewUserRepository(conn *pgx.Conn) *UserRepository {
+    return &UserRepository{
+        conn: conn,
+    }
+}
+
 func (u *UserRepository) InsertIntoUsers(user *domain.User) error {
     _, err := u.conn.Exec(
         context.Background(),
-        `INSERT INTO users(username, email, password) VALUES ($1, $2, $3)`,
+        `INSERT INTO users(username, email, password, token)
+        VALUES ($1, $2, $3, $4)`,
+        user.Username, user.Email, user.Password, user.Token,
     )
     if err != nil {
         return fmt.Errorf("Error inserting user into database: %v", err)
@@ -26,7 +34,7 @@ func (u *UserRepository) InsertIntoUsers(user *domain.User) error {
 func (u *UserRepository) GetByUsername(username string) (*domain.User, error) {
     row := u.conn.QueryRow(
         context.Background(),
-        `SELECT user_id, username, email, role, verified, created_at, updated_at
+        `SELECT user_id, username, password, email, role, verified, created_at, updated_at
         FROM users
         WHERE username = $1`,
         username,
@@ -34,8 +42,8 @@ func (u *UserRepository) GetByUsername(username string) (*domain.User, error) {
 
     user := &domain.User{}
     if err := row.Scan(
-        &user.UserID, &user.Username, &user.Email, &user.Role, &user.Verified,
-        &user.CreatedAt, &user.UpdatedAt,
+        &user.UserID, &user.Username, &user.Password, &user.Email, &user.Role,
+        &user.Verified, &user.CreatedAt, &user.UpdatedAt,
     ); err != nil {
         return &domain.User{}, fmt.Errorf("Failed to get user %s: %v", username, err)
     }
@@ -52,7 +60,7 @@ func (u *UserRepository) GetByEmail(email string) (*domain.User, error) {
         email,
     )
 
-    var user *domain.User
+    user := &domain.User{}
     if err := row.Scan(
         &user.UserID, &user.Username, &user.Email, &user.Role, &user.Verified,
         &user.CreatedAt, &user.UpdatedAt,

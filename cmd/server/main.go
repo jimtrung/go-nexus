@@ -17,9 +17,9 @@ func main() {
 		return
 	}
 
-	database := db.ConnectToDatabase()
+	conn := db.ConnectToDatabase()
     middleware.NewOAuth()
 	server := api.NewServer("debug")
 
-    server.StartServer(database, os.Getenv("PORT"))
+    server.StartServer(conn, os.Getenv("PORT"), logger)
 }

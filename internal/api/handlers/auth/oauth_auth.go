@@ -6,11 +6,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jimtrung/go-nexus/internal/infra/logger/zap"
-	"github.com/jimtrung/go-nexus/internal/services"
 	"github.com/markbates/goth/gothic"
 )
 
-func BeginAuthProviderCallback(c *gin.Context) {
+func (h *AuthHandler) BeginAuthProviderCallback(c *gin.Context) {
 	provider := c.Param("provider")
 	c.Request = c.Request.WithContext(context.WithValue(
 		context.Background(),
@@ -20,7 +19,7 @@ func BeginAuthProviderCallback(c *gin.Context) {
 	gothic.BeginAuthHandler(c.Writer, c.Request)
 }
 
-func GetAuthCallBackFunction(c *gin.Context) {
+func (h *AuthHandler) GetAuthCallBackFunction(c *gin.Context) {
 	provider := c.Param("provider")
 	c.Request = c.Request.WithContext(context.WithValue(
 		context.Background(),
@@ -34,7 +33,7 @@ func GetAuthCallBackFunction(c *gin.Context) {
 		return
 	}
 
-    userInfo, err := services.SignupIfNotExist(user.Email)
+    userInfo, err := h.AuthService.SignupIfNotExist(user.Email)
     if err != nil {
         zap.NewLogger().Error("error", err.Error())
         c.JSON(http.StatusInternalServerError, gin.H{
@@ -43,7 +42,7 @@ func GetAuthCallBackFunction(c *gin.Context) {
         return
     }
 
-    signedToken, err := services.CreateSignedToken(userInfo.Username)
+    signedToken, err := h.AuthService.CreateSignedToken(userInfo.Username)
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{
             "error": "Failed to create a signed token",
@@ -53,6 +52,4 @@ func GetAuthCallBackFunction(c *gin.Context) {
 
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", signedToken, 3600*24, "/", "", false, true)
-
-	c.Redirect(http.StatusFound, "http://127.0.0.1:8080/p/user/profile")
 }
