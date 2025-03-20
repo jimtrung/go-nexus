@@ -3,3 +3,4 @@ tmp/
 .air.toml
 todo
 node_modules/
+static/output/output.css
