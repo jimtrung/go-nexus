@@ -1,0 +1,42 @@
+package component
+
+import "github.com/jimtrung/go-nexus/templates/layout"
+
+templ Home() {
+    @layout.Base("Home") {
+        <header>
+            <div class="flex items-center bg-[#0a0e1a] text-white py-3 px-6">
+                <div class="flex items-center">
+                    <img src="/static/img/google-logo.png" class="h-10">
+                    <span class="font-bold text-xl ml-2">JimTrung</span>
+                </div>
+
+                <nav class="ml-10">
+                    <ul class="flex items-center text-sm font-semibold space-x-6">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">News</a></li>
+                        <li><a href="#">Products</a></li>
+                        <li><a href="#">Update</a></li>
+                        <li><a href="#">Contacts</a></li>
+                        <li class="flex items-center">
+                            <a href="#">More</a>
+                            <span class="ml-1 text-gray-400">▼</span>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="flex items-center ml-auto space-x-5">
+                    <img src="/static/img/flag-usa.png" class="h-5">
+                    <a href="#" class="text-gray-300">Pricing</a>
+                    <a href="#" class="text-gray-400 hover:text-white">
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white">
+                    </a>
+                </div>
+            </div>
+        </header>
+        <main></main>
+        <footer></footer>
+    }
+}
