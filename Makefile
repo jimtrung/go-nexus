@@ -24,4 +24,7 @@ migrate-new:
 	migrate create -ext sql -dir migrations -seq ${MIGRATION_NAME}
 
 lines:
-	 find . -type f \( -name "*.go" -o -name "*.templ" \) -print0 | xargs -0 wc -l
+	find . -type f \( -name "*.go" -o -name "*.templ" -o -name "*.css" \) -print0 | xargs -0 wc -l
+
+watch:
+	npx tailwindcss -i static/css/style.css -o static/css/output.css --watch
