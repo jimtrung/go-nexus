@@ -5,7 +5,8 @@ import "github.com/jimtrung/go-nexus/templates/layout"
 templ Home() {
     @layout.Base("Home") {
         <header>
-            <div class="flex items-center bg-[#0a0e1a] text-white py-3 px-6 justify-center">
+            <div class="flex items-center bg-[#0a0e1a] text-white py-3 px-6
+            justify-center fixed left-0 right-0 top-0">
                 <div class="flex items-center">
                     <img src="/static/img/google-logo.png" class="h-10">
                     <span class="font-bold text-xl ml-2">JimTrung</span>
@@ -36,17 +37,20 @@ templ Home() {
         </header>
 
         <main>
-            <div class="h-96"></div>
+            <div class="h-96 bg-red-300 pt-16 flex">
+                <h1 class="justify-center">Github streak keeper</h1>
+            </div>
         </main>
 
         <footer class="bg-gray-100 py-12 px-6 lg:px-24">
-            <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+            <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2
+            lg:grid-cols-4 gap-10">
                 <div>
                     <img src="/static/img/logo.png" class="h-12 mb-4">
                     <p class="text-gray-600 text-sm">Integer auctor aliquet martor, sed lorem malesuada eros blandit eget.</p>
                     <div class="mt-4">
-                        <p class="text-sm text-gray-600">T. +1 837 652 8800</p>
-                        <p class="text-sm text-gray-600">E. ibthemes21@gmail.com</p>
+                        <p class="text-sm text-gray-600">T. +123</p>
+                        <p class="text-sm text-gray-600">E. email@gmail.com</p>
                     </div>
                 </div>
                 <div>
@@ -78,7 +82,7 @@ templ Home() {
                 </div>
             </div>
             <div class="mt-10 text-center text-gray-500 text-sm">
-                <p>&copy; IB-Themes 2024. Based in London, United Kingdom.</p>
+                <p>&copy; IB-Themes 2024. Based in Ha Noi, Viet Nam.</p>
             </div>
         </footer>
     }
