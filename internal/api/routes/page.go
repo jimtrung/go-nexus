@@ -13,12 +13,18 @@ func (r *Routes) SetupPageRoutes(logger *zap.Logger) {
 
 	authRepo := repository.NewUserRepository(r.Conn)
 	authService := services.NewAuthService(authRepo)
-	pageHandler := page.NewPageLogger(logger, authService)
+	friendRepo := repository.NewFriendRepository(r.Conn)
+	friendService := services.NewFriendService(friendRepo)
+	pageHandler := page.NewPageHandler(logger, authService, friendService)
 
-	r.Router.GET("/", pageHandler.RenderHomePage)
-	r.Router.GET("/login", pageHandler.RenderLoginPage)
-	r.Router.GET("/signup", pageHandler.RenderSignupPage)
-	r.Router.GET("/profile", middleware.RequireAuth, pageHandler.RenderProfilePage)
-	r.Router.GET("/forgot-password", pageHandler.RenderForgotPasswordPage)
-	r.Router.GET("/reset-password/:token", pageHandler.RenderResetPasswordPage)
+	pageRouter := r.Router.Group("/p")
+	{
+		pageRouter.GET("/", pageHandler.RenderHomePage)
+		pageRouter.GET("/login", pageHandler.RenderLoginPage)
+		pageRouter.GET("/signup", pageHandler.RenderSignupPage)
+		pageRouter.GET("/profile", middleware.RequireAuth, pageHandler.RenderProfilePage)
+		pageRouter.GET("/forgot-password", pageHandler.RenderForgotPasswordPage)
+		pageRouter.GET("/reset-password/:token", pageHandler.RenderResetPasswordPage)
+		pageRouter.GET("/friends", middleware.RequireAuth, pageHandler.RenderFriendsPage)
+	}
 }

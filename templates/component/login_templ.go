@@ -71,7 +71,7 @@ func Login() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div></form><div class=\"mt-8 text-center\"><p class=\"text-sm text-gray-600\">Don't have an account? <a href=\"/signup\" class=\"font-semibold text-teal-500 hover:text-teal-600 transition duration-200\">Sign up</a></p><p class=\"mt-2 text-sm text-gray-600\"><a href=\"/forgot-password\" class=\"font-semibold text-teal-500 hover:text-teal-600 transition duration-200\">Forgot your password?</a></p></div></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div></form><div class=\"mt-8 text-center\"><p class=\"text-sm text-gray-600\">Don't have an account? <a href=\"/p/signup\" class=\"font-semibold text-teal-500 hover:text-teal-600 transition duration-200\">Sign up</a></p><p class=\"mt-2 text-sm text-gray-600\"><a href=\"/p/forgot-password\" class=\"font-semibold text-teal-500 hover:text-teal-600 transition duration-200\">Forgot your password?</a></p></div></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

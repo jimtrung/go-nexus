@@ -14,4 +14,5 @@ type Routes struct {
 func (r *Routes) SetupRoutes(logger *zap.Logger) {
 	r.SetupAuthRoutes(logger)
     r.SetupPageRoutes(logger)
+	r.SetupFriendRoutes(logger)
 }
