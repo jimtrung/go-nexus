@@ -1,0 +1,88 @@
+package component
+
+import "github.com/jimtrung/go-nexus/templates/layout"
+
+templ Profile() {
+    @layout.Base("Profile") {
+        <header>
+            <div class="flex items-center bg-[#1a2038] text-gray-200 py-3 px-6 justify-between fixed left-0 right-0 top-0 shadow-md z-50">
+                <div class="flex items-center">
+                    <a href="/" class="flex items-center">
+                        <img src="/static/img/logo.png" class="h-10" alt="GoNexus Logo">
+                    </a>
+                </div>
+
+                <div class="flex items-center space-x-5">
+                    <button 
+                        hx-post="/auth/logout" 
+                        hx-ext="json-enc" 
+                        hx-target="body" 
+                        hx-push-url="true"
+                        class="text-gray-200 hover:text-teal-300 transition duration-200"
+                    >
+                        Log out
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="min-h-screen pt-28 pb-20 flex flex-col items-center bg-gray-50">
+            <div class="w-full max-w-4xl px-6">
+                <div class="bg-white rounded-xl shadow-md p-8">
+                    <div class="flex items-start space-x-8">
+                        <div class="flex-shrink-0">
+                            <div class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center">
+                                <svg class="h-16 w-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="flex-grow">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h1 class="text-2xl font-bold text-gray-900" id="username">Username</h1>
+                                    <p class="text-gray-500" id="email">user@example.com</p>
+                                </div>
+                                <button 
+                                    class="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-md transition duration-200"
+                                >
+                                    Edit Profile
+                                </button>
+                            </div>
+
+                            <div class="mt-8">
+                                <h2 class="text-lg font-semibold text-gray-900 mb-4">Account Settings</h2>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between py-3 border-b">
+                                        <div>
+                                            <h3 class="font-medium text-gray-900">Two-Factor Authentication</h3>
+                                            <p class="text-sm text-gray-500">Add an extra layer of security to your account</p>
+                                        </div>
+                                        <button class="text-teal-500 hover:text-teal-600 font-medium">Enable</button>
+                                    </div>
+
+                                    <div class="flex items-center justify-between py-3 border-b">
+                                        <div>
+                                            <h3 class="font-medium text-gray-900">Connected Accounts</h3>
+                                            <p class="text-sm text-gray-500">Manage your connected social accounts</p>
+                                        </div>
+                                        <button class="text-teal-500 hover:text-teal-600 font-medium">Manage</button>
+                                    </div>
+
+                                    <div class="flex items-center justify-between py-3">
+                                        <div>
+                                            <h3 class="font-medium text-gray-900">Delete Account</h3>
+                                            <p class="text-sm text-gray-500">Permanently delete your account and all data</p>
+                                        </div>
+                                        <button class="text-red-500 hover:text-red-600 font-medium">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+} 

@@ -56,7 +56,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 
 	token, err := h.AuthService.Login(req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": err.Error(),
 		})
 		h.Logger.Error(err.Error())
@@ -66,7 +66,10 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", token, 3600*4, "/", "", true, true)
 	h.Logger.Info(fmt.Sprintf("User %s login successfully", req.Username))
-	c.JSON(http.StatusOK, gin.H{"name": req.Username})
+
+	// Redirect to profile page after successful login
+	c.Header("HX-Redirect", "/profile")
+	c.JSON(http.StatusOK, gin.H{"success": true})
 }
 
 func (h *AuthHandler) Logout(c *gin.Context) {
@@ -116,19 +119,19 @@ func (h *AuthHandler) ResetPassword(c *gin.Context) {
 		return
 	}
 
-    hash, err := services.HashPassword(req.Password)
-    if err != nil {
+	hash, err := services.HashPassword(req.Password)
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-            "error": err.Error(),
-        })
+			"error": err.Error(),
+		})
 		h.Logger.Error(err.Error())
-        return
-    }
+		return
+	}
 
 	if err := h.AuthService.AuthRepo.UpdatePassword(req.Token, hash); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-            "error": err.Error(),
-        })
+			"error": err.Error(),
+		})
 		h.Logger.Error(err.Error())
 		return
 	}
@@ -140,25 +143,25 @@ func (h *AuthHandler) ResetPassword(c *gin.Context) {
 }
 
 func (h *AuthHandler) Verify(c *gin.Context) {
-    token := c.Param("token")
-    if token == "" {
-        c.JSON(http.StatusBadRequest, gin.H{
-            "error": "Empty token",
-        })
-        h.Logger.Error("Empty token")
-        return
-    }
+	token := c.Param("token")
+	if token == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Empty token",
+		})
+		h.Logger.Error("Empty token")
+		return
+	}
 
-    if err := h.AuthService.AuthRepo.Verify(token); err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{
-            "error": err.Error(),
-        })
-        h.Logger.Error(err.Error())
-        return
-    }
+	if err := h.AuthService.AuthRepo.Verify(token); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		h.Logger.Error(err.Error())
+		return
+	}
 
-    h.Logger.Info("User verified")
-    c.JSON(http.StatusOK, gin.H{
-        "message": "User verified",
-    })
+	h.Logger.Info("User verified")
+	c.JSON(http.StatusOK, gin.H{
+		"message": "User verified",
+	})
 }

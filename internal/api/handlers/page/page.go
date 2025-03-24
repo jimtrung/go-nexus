@@ -39,3 +39,8 @@ func (h *PageHandler) RenderSignupPage(c *gin.Context) {
 		h.Logger.Error(err.Error())
 	}
 }
+
+func (h *PageHandler) RenderProfilePage(c *gin.Context) {
+	// TODO: Add authentication middleware check
+	component.Profile().Render(c.Request.Context(), c.Writer)
+}
