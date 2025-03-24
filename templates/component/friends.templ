@@ -3,6 +3,7 @@ package component
 import (
     "fmt"
     "github.com/jimtrung/go-nexus/templates/layout"
+    "github.com/jimtrung/go-nexus/internal/domain"
 )
 
 type Friend struct {
@@ -17,121 +18,102 @@ type Friend struct {
 }
 
 type FriendsProps struct {
-    Friends          []Friend
-    PendingRequests  []Friend
+    User            *domain.User
+    Friends         []Friend
+    PendingRequests []Friend
     IncomingRequests []Friend
+}
+
+templ FriendListItem(friend Friend) {
+    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+        @UserCard(friend.Username, friend.Avatar, friend.Status, "", true)
+        <button
+            hx-delete={ fmt.Sprintf("/friends/remove/%d", friend.FriendID) }
+            hx-target="closest div"
+            hx-swap="outerHTML"
+            class="text-red-500 hover:text-red-700 transition duration-200"
+        >
+            Remove
+        </button>
+    </div>
+}
+
+templ IncomingRequestItem(request Friend) {
+    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+        @UserCard(request.Username, request.Avatar, "", request.CreatedAt, false)
+        <div class="space-x-2">
+            <button
+                hx-post={ fmt.Sprintf("/friends/accept/%d", request.FriendID) }
+                hx-target="closest div"
+                hx-swap="outerHTML"
+                class="text-teal-500 hover:text-teal-700 transition duration-200"
+            >
+                Accept
+            </button>
+            <button
+                hx-delete={ fmt.Sprintf("/friends/reject/%d", request.FriendID) }
+                hx-target="closest div"
+                hx-swap="outerHTML"
+                class="text-red-500 hover:text-red-700 transition duration-200"
+            >
+                Reject
+            </button>
+        </div>
+    </div>
+}
+
+templ SentRequestItem(request Friend) {
+    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+        @UserCard(request.Username, request.Avatar, "", request.CreatedAt, false)
+        <button
+            hx-delete={ fmt.Sprintf("/friends/cancel/%d", request.FriendID) }
+            hx-target="closest div"
+            hx-swap="outerHTML"
+            class="text-red-500 hover:text-red-700 transition duration-200"
+        >
+            Cancel
+        </button>
+    </div>
 }
 
 templ Friends(props FriendsProps) {
     @layout.Base("Friends") {
-        <div class="container mx-auto px-4 py-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Friends List -->
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <h2 class="text-xl font-semibold mb-4">Friends</h2>
-                    <div class="space-y-4">
+        @Navbar(props.User)
+
+        <div class="min-h-screen pt-28 pb-20 flex flex-col items-center bg-gray-50">
+            <div class="w-full max-w-6xl px-6">
+                @PageTitle("Friends", "Manage your connections")
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @CardContainer("Friends") {
                         if len(props.Friends) == 0 {
                             <p class="text-gray-500">No friends yet</p>
                         } else {
                             for _, friend := range props.Friends {
-                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                    <div class="flex items-center">
-                                        <img src={ friend.Avatar } alt={ friend.Username } class="w-10 h-10 rounded-full">
-                                        <div class="ml-3">
-                                            <p class="font-medium">{ friend.Username }</p>
-                                            <div class="flex items-center">
-                                                if friend.Status == "online" {
-                                                    <span class="status-indicator status-online"></span>
-                                                    <span class="text-sm text-gray-500">Online</span>
-                                                } else {
-                                                    <span class="status-indicator status-offline"></span>
-                                                    <span class="text-sm text-gray-500">Offline</span>
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button
-                                        hx-delete={ fmt.Sprintf("/friends/remove/%d", friend.FriendID) }
-                                        hx-target="closest div"
-                                        hx-swap="outerHTML"
-                                        class="text-red-500 hover:text-red-700"
-                                    >
-                                        Remove
-                                    </button>
-                                </div>
+                                @FriendListItem(friend)
                             }
                         }
-                    </div>
-                </div>
+                    }
 
-                <!-- Incoming Requests -->
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <h2 class="text-xl font-semibold mb-4">Incoming Requests</h2>
-                    <div class="space-y-4">
+                    @CardContainer("Incoming Requests") {
                         if len(props.IncomingRequests) == 0 {
                             <p class="text-gray-500">No incoming requests</p>
                         } else {
                             for _, request := range props.IncomingRequests {
-                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                    <div class="flex items-center">
-                                        <img src={ request.Avatar } alt={ request.Username } class="w-10 h-10 rounded-full">
-                                        <div class="ml-3">
-                                            <p class="font-medium">{ request.Username }</p>
-                                            <p class="text-sm text-gray-500">Sent { request.CreatedAt }</p>
-                                        </div>
-                                    </div>
-                                    <div class="space-x-2">
-                                        <button
-                                            hx-post={ fmt.Sprintf("/friends/accept/%d", request.FriendID) }
-                                            hx-target="closest div"
-                                            hx-swap="outerHTML"
-                                            class="text-green-500 hover:text-green-700"
-                                        >
-                                            Accept
-                                        </button>
-                                        <button
-                                            hx-delete={ fmt.Sprintf("/friends/reject/%d", request.FriendID) }
-                                            hx-target="closest div"
-                                            hx-swap="outerHTML"
-                                            class="text-red-500 hover:text-red-700"
-                                        >
-                                            Reject
-                                        </button>
-                                    </div>
-                                </div>
+                                @IncomingRequestItem(request)
                             }
                         }
-                    </div>
-                </div>
+                    }
 
-                <!-- Sent Requests -->
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <h2 class="text-xl font-semibold mb-4">Sent Requests</h2>
-                    <div class="space-y-4">
+                    @CardContainer("Sent Requests") {
                         if len(props.PendingRequests) == 0 {
                             <p class="text-gray-500">No sent requests</p>
                         } else {
                             for _, request := range props.PendingRequests {
-                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                    <div class="flex items-center">
-                                        <img src={ request.Avatar } alt={ request.Username } class="w-10 h-10 rounded-full">
-                                        <div class="ml-3">
-                                            <p class="font-medium">{ request.Username }</p>
-                                            <p class="text-sm text-gray-500">Sent { request.CreatedAt }</p>
-                                        </div>
-                                    </div>
-                                    <button
-                                        hx-delete={ fmt.Sprintf("/friends/cancel/%d", request.FriendID) }
-                                        hx-target="closest div"
-                                        hx-swap="outerHTML"
-                                        class="text-red-500 hover:text-red-700"
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
+                                @SentRequestItem(request)
                             }
                         }
-                    </div>
+                    }
                 </div>
             </div>
         </div>

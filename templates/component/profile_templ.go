@@ -46,14 +46,18 @@ func Profile(user *domain.User) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<header><div class=\"flex items-center bg-[#1a2038] text-gray-200 py-3 px-6 justify-between fixed left-0 right-0 top-0 shadow-md z-50\"><div class=\"flex items-center\"><a href=\"/\" class=\"flex items-center cursor-pointer\"><img src=\"/static/img/logo.png\" class=\"h-10\" alt=\"GoNexus Logo\"></a></div><div class=\"flex items-center space-x-5\"><button hx-post=\"/auth/logout\" hx-ext=\"json-enc\" hx-target=\"body\" hx-push-url=\"true\" class=\"text-gray-200 hover:text-teal-300 transition duration-200 cursor-pointer\">Log out</button></div></div></header><div class=\"min-h-screen pt-28 pb-20 flex flex-col items-center bg-gray-50\"><div class=\"w-full max-w-4xl px-6\"><div class=\"bg-white rounded-xl shadow-md p-8\"><div class=\"flex items-start space-x-8\"><div class=\"flex-shrink-0\"><div class=\"w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center\"><svg class=\"h-16 w-16 text-gray-400\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z\"></path></svg></div></div><div class=\"flex-grow\"><div class=\"flex justify-between items-start\"><div><h1 class=\"text-2xl font-bold text-gray-900\">")
+			templ_7745c5c3_Err = Navbar(user).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, " <div class=\"min-h-screen pt-28 pb-20 flex flex-col items-center bg-gray-50\"><div class=\"w-full max-w-4xl px-6\"><div class=\"bg-white rounded-xl shadow-md p-8\"><div class=\"flex items-start space-x-8\"><div class=\"flex-shrink-0\"><div class=\"w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center\"><svg class=\"h-16 w-16 text-gray-400\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z\"></path></svg></div></div><div class=\"flex-grow\"><div class=\"flex justify-between items-start\"><div><h1 class=\"text-2xl font-bold text-gray-900\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(user.Username)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/component/profile.templ`, Line: 47, Col: 96}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/component/profile.templ`, Line: 27, Col: 96}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -66,7 +70,7 @@ func Profile(user *domain.User) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(user.Email)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/component/profile.templ`, Line: 48, Col: 73}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/component/profile.templ`, Line: 28, Col: 73}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {

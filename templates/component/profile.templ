@@ -7,27 +7,7 @@ import (
 
 templ Profile(user *domain.User) {
     @layout.Base("Profile") {
-        <header>
-            <div class="flex items-center bg-[#1a2038] text-gray-200 py-3 px-6 justify-between fixed left-0 right-0 top-0 shadow-md z-50">
-                <div class="flex items-center">
-                    <a href="/" class="flex items-center cursor-pointer">
-                        <img src="/static/img/logo.png" class="h-10" alt="GoNexus Logo">
-                    </a>
-                </div>
-
-                <div class="flex items-center space-x-5">
-                    <button 
-                        hx-post="/auth/logout" 
-                        hx-ext="json-enc" 
-                        hx-target="body" 
-                        hx-push-url="true"
-                        class="text-gray-200 hover:text-teal-300 transition duration-200 cursor-pointer"
-                    >
-                        Log out
-                    </button>
-                </div>
-            </div>
-        </header>
+        @Navbar(user)
 
         <div class="min-h-screen pt-28 pb-20 flex flex-col items-center bg-gray-50">
             <div class="w-full max-w-4xl px-6">

@@ -8,6 +8,7 @@ import (
 	"github.com/jimtrung/go-nexus/internal/infra/logger/zap"
 	"github.com/jimtrung/go-nexus/internal/services"
 	"github.com/jimtrung/go-nexus/templates/component"
+	"github.com/jimtrung/go-nexus/internal/domain"
 )
 
 type PageHandler struct {
@@ -30,7 +31,18 @@ func Render(c *gin.Context, component templ.Component) error {
 }
 
 func (h *PageHandler) RenderHomePage(c *gin.Context) {
-	if err := Render(c, component.Home()); err != nil {
+	userIDInt, exists := c.Get("user_id")
+	var user *domain.User
+	if exists {
+		userID := uint(userIDInt.(int))
+		var err error
+		user, err = h.AuthService.GetUserByID(userID)
+		if err != nil {
+			h.Logger.Error("Failed to get user info", err.Error())
+		}
+	}
+
+	if err := Render(c, component.Home(user)); err != nil {
 		h.Logger.Error(err.Error())
 	}
 }
@@ -93,6 +105,12 @@ func (h *PageHandler) RenderFriendsPage(c *gin.Context) {
 	}
 
 	userID := uint(userIDInt.(int))
+	user, err := h.AuthService.GetUserByID(userID)
+	if err != nil {
+		h.Logger.Error("Failed to get user info", err.Error())
+		c.Redirect(http.StatusSeeOther, "/p/login")
+		return
+	}
 
 	friends, err := h.FriendService.GetAllFriends(userID)
 	if err != nil {
@@ -116,6 +134,7 @@ func (h *PageHandler) RenderFriendsPage(c *gin.Context) {
 	}
 
 	friendsProps := component.FriendsProps{
+		User:             user,
 		Friends:          make([]component.Friend, len(friends)),
 		PendingRequests:  make([]component.Friend, len(pendingRequests)),
 		IncomingRequests: make([]component.Friend, len(incomingRequests)),

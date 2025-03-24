@@ -67,7 +67,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	c.SetCookie("Authorization", token, 3600*4, "/", "", true, true)
 	h.Logger.Info(fmt.Sprintf("User %s login successfully", req.Username))
 
-	c.Header("HX-Redirect", "/profile")
+	c.Header("HX-Redirect", "/p/profile")
 	c.Status(http.StatusOK)
 }
 
@@ -76,7 +76,7 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 	c.SetCookie("Authorization", "", -1, "/", "", true, true)
 	h.Logger.Info("User logged out successfully")
 
-	c.Header("HX-Redirect", "/login")
+	c.Header("HX-Redirect", "/p/login")
 	c.Status(http.StatusOK)
 }
 
@@ -140,7 +140,7 @@ func (h *AuthHandler) ResetPassword(c *gin.Context) {
 	}
 
 	h.Logger.Info("Reset password successfully")
-	c.Header("HX-Redirect", "/login")
+	c.Header("HX-Redirect", "/p/login")
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Password has been reset successfully",
 	})

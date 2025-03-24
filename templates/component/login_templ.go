@@ -43,7 +43,7 @@ func Login() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = Navbar().Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = Navbar(nil).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -71,7 +71,7 @@ func Login() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div></form><div class=\"mt-8 text-center\"><p class=\"text-sm text-gray-600\">Don't have an account? <a href=\"/p/signup\" class=\"font-semibold text-teal-500 hover:text-teal-600 transition duration-200\">Sign up</a></p><p class=\"mt-2 text-sm text-gray-600\"><a href=\"/p/forgot-password\" class=\"font-semibold text-teal-500 hover:text-teal-600 transition duration-200\">Forgot your password?</a></p></div></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div></form><div class=\"mt-6\"><div class=\"relative\"><div class=\"absolute inset-0 flex items-center\"><div class=\"w-full border-t border-gray-300\"></div></div><div class=\"relative flex justify-center text-sm\"><span class=\"px-2 bg-white text-gray-500\">Or sign in with</span></div></div><div class=\"mt-6 grid grid-cols-2 gap-3\"><a href=\"/auth/google\" class=\"flex justify-center items-center py-2.5 border border-gray-300 rounded-md hover:bg-gray-50 transition duration-200\"><svg class=\"h-5 w-5 mr-2\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12.24 10.285V14.4h6.806c-.275 1.765-2.056 5.174-6.806 5.174-4.095 0-7.439-3.389-7.439-7.574s3.345-7.574 7.439-7.574c2.33 0 3.891.989 4.785 1.849l3.254-3.138C18.189 1.186 15.479 0 12.24 0c-6.635 0-12 5.365-12 12s5.365 12 12 12c6.926 0 11.52-4.869 11.52-11.726 0-.788-.085-1.39-.189-1.989H12.24z\" fill=\"#4285F4\"></path></svg> <span class=\"text-sm font-medium text-gray-700\">Google</span></a> <a href=\"/auth/facebook\" class=\"flex justify-center items-center py-2.5 border border-gray-300 rounded-md hover:bg-gray-50 transition duration-200\"><svg class=\"h-5 w-5 mr-2\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z\" fill=\"#1877F2\"></path></svg> <span class=\"text-sm font-medium text-gray-700\">Facebook</span></a></div></div><div class=\"mt-8 text-center\"><p class=\"text-sm text-gray-600\">Don't have an account? <a href=\"/p/signup\" class=\"font-semibold text-teal-500 hover:text-teal-600 transition duration-200\">Sign up</a></p><p class=\"mt-2 text-sm text-gray-600\"><a href=\"/p/forgot-password\" class=\"font-semibold text-teal-500 hover:text-teal-600 transition duration-200\">Forgot your password?</a></p></div></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
