@@ -1,110 +1,176 @@
-# GoNexus
+# GoNexus - E-commerce Platform
 
-GoNexus is a next-generation **multi-purpose digital ecosystem** that seamlessly integrates **social networking, e-commerce, finance, education, productivity, and automation** into a single scalable platform. Built using **GOTTH (Golang, Templ, TailwindCSS, HTMX)**, GoNexus is designed to be **modular, high-performance, and future-proof**, catering to individuals, businesses, and entire communities.
+GoNexus is a modern e-commerce platform built with Go, featuring a beautiful UI and robust functionality. The platform supports user authentication, product management, and a responsive shopping experience.
 
-## 🚀 Features
+## Features
 
-### 1️⃣ Social Network & Community Hub (Like Facebook + Reddit + Discord)
-- **User Profiles & Networking** – Customizable profiles for individuals and businesses
-- **Groups & Forums** – Public and private communities for discussions
-- **Live Chat & DMs** – Real-time messaging powered by HTMX
-- **Events & Meetups** – Organize and join virtual or in-person events
+- 🛍️ Modern E-commerce UI with Tailwind CSS
+- 🔐 Secure Authentication System
+  - JWT-based authentication
+  - OAuth2 support (Google, GitHub)
+  - Password reset functionality
+  - Email verification
+- 🎨 Responsive Design
+- 🛒 Shopping Cart System
+- 📱 Mobile-friendly Interface
+- 🔍 Product Search and Filtering
+- 📦 Product Categories
+- 💳 Payment Integration (coming soon)
 
-### 2️⃣ E-Commerce & Marketplace (Like Shopify + Fiverr + Amazon)
-- **Buy & Sell Products** – Businesses and individuals can list and sell items
-- **Freelance Gigs** – Hire and offer services in an open marketplace
-- **Secure Payments** – Integrated payment solutions (Stripe, PayPal, Crypto)
-- **Order & Inventory Management** – Track and manage sales
+## Tech Stack
 
-### 3️⃣ Finance & Digital Wallet (Like PayPal + Stripe + Revolut)
-- **Digital Wallet** – Send, receive, and store money securely
-- **Subscription Services** – Support for premium memberships and content
-- **P2P Transactions** – Secure peer-to-peer payments
-- **Crypto & Stock Tracking** – Monitor and manage digital assets
+- **Backend**: Go
+- **Frontend**: 
+  - Templ (Go template engine)
+  - Tailwind CSS
+  - HTMX for dynamic interactions
+- **Database**: PostgreSQL
+- **Authentication**: JWT, OAuth2
+- **Email Service**: SMTP
+- **File Storage**: Local (configurable)
 
-### 4️⃣ Learning & Skill Development (Like Udemy + Coursera)
-- **Online Courses** – Create and enroll in educational courses
-- **Certifications** – Issue and earn verifiable certificates
-- **Live Webinars** – Conduct and attend live learning sessions
-- **AI-Powered Recommendations** – Personalized course suggestions
+## Prerequisites
 
-### 5️⃣ Productivity & Collaboration (Like Trello + Slack + Notion)
-- **Task & Project Management** – Kanban boards and task lists
-- **Document Sharing & Editing** – Real-time collaboration tools
-- **Automation & Workflows** – Schedule and streamline work processes
-- **Business Team Spaces** – Private workspaces for organizations
+- Go 1.21 or higher
+- PostgreSQL 15 or higher
+- Node.js and npm (for Tailwind CSS)
 
-### 6️⃣ Automation & API Integrations (Like Zapier + IFTTT)
-- **Webhooks & Triggers** – Automate actions based on external inputs
-- **Scheduled Tasks** – Recurring task execution
-- **Data Syncing** – Connect with third-party tools and services
+## Environment Variables
 
-## 🛠 Tech Stack (GOTTH)
-- **Golang** – High-performance backend services
-- **Templ** – Fast and secure server-side rendering
-- **TailwindCSS** – Modern and responsive UI design
-- **HTMX** – Real-time updates without full-page reloads
-- **Microservices** – Modular architecture for scalability
-- **Databases:**
-  - PostgreSQL – Structured data (users, transactions, content, etc.)
-  - Redis – Caching for faster access
-  - ClickHouse – Analytics and reporting
-  - RabbitMQ/NATS – Asynchronous messaging and automation
+Create a `.env` file in the root directory with the following variables:
 
-## 💰 Monetization Strategy
-- **Subscription Plans** – Premium features for businesses and power users
-- **Transaction Fees** – Commission from marketplace and e-commerce transactions
-- **Sponsored Content & Ads** – Businesses can promote products or services
-- **API Access & Integrations** – Paid API access for enterprise solutions
-
-## 🎯 Why GoNexus?
-✔ **Serves Multiple User Groups** – Businesses, freelancers, educators, shoppers, and general users
-✔ **Highly Scalable & Modular** – Start small and expand with more features over time
-✔ **Multiple Revenue Streams** – Monetization via subscriptions, transactions, and ads
-✔ **Future-Proof** – Easily integrates AI, crypto, and automation technologies
-
-## 🚧 Roadmap
-1. **MVP Development** – Focus on core social networking, marketplace, and finance features
-2. **Expand Automation & API Integrations** – Enhance workflow automation
-3. **Launch Learning & Productivity Tools** – Enable education and business collaboration
-4. **Global Expansion & Monetization** – Scale to wider audiences and optimize revenue streams
-
-## 🔧 How to Run
-
-### Prerequisites
-- Install **Golang** (https://go.dev/dl/)
-- Install **Air** (Live reload for Golang):
-  ```sh
-  go install github.com/cosmtrek/air@latest
-  ```
-- Install **PostgreSQL** and ensure it is running
-- Install **Redis** for caching
-
-### Clone the Repository
-```sh
-git clone https://github.com/jimtrung/go-nexus.git
-cd gonexus
-```
-
-### Configure Environment Variables
-Create a `.env` file and set the required configurations:
 ```env
-DATABASE_URL=postgres://user:password@localhost:5432/gonexus
+# Server Configuration
 PORT=8080
+ENV=development
+
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=your_password
+DB_NAME=gonexus
+
+# JWT Configuration
+JWT_SECRET=your_jwt_secret
+JWT_EXPIRATION=24h
+
+# OAuth2 Configuration
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+GITHUB_CLIENT_ID=your_github_client_id
+GITHUB_CLIENT_SECRET=your_github_client_secret
+
+# Email Configuration
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=your_email@gmail.com
+SMTP_PASSWORD=your_app_specific_password
+SMTP_FROM_EMAIL=your_email@gmail.com
+SMTP_FROM_NAME=GoNexus
+
+# File Storage
+UPLOAD_DIR=./uploads
+MAX_UPLOAD_SIZE=5242880  # 5MB in bytes
 ```
 
-### Run the Project with Air
-```sh
-air
+## Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/jimtrung/go-nexus.git
+cd go-nexus
 ```
-This will start the GoNexus server with live reload enabled.
 
-## 📜 License
-GoNexus is an open-source project (license TBD). Contributions are welcome!
+2. Install dependencies:
+```bash
+go mod download
+```
 
-## 🤝 Contributing
-Interested in contributing? Check out the contribution guidelines and join our community discussions.
+3. Set up the database:
+```bash
+# Create the database
+createdb gonexus
 
----
+# Run migrations (if available)
+go run cmd/migrate/main.go
+```
 
-Built with ❤️ using **GOTTH** (Golang, Templ, TailwindCSS, HTMX)
+4. Configure environment variables:
+```bash
+cp .env.example .env
+# Edit .env with your configuration
+```
+
+5. Build and run the application:
+```bash
+go run cmd/main.go
+```
+
+## Development
+
+### Frontend Development
+
+The project uses Tailwind CSS for styling. To compile CSS:
+
+```bash
+# Install Tailwind CSS
+npm install
+
+# Watch for changes
+npm run watch
+```
+
+### Project Structure
+
+```
+gonexus/
+├── cmd/                    # Application entry points
+├── internal/              # Private application code
+│   ├── api/              # API handlers and routes
+│   ├── domain/           # Business logic and models
+│   ├── infra/            # Infrastructure code
+│   ├── repository/       # Database repositories
+│   └── services/         # Business services
+├── templates/            # HTML templates
+│   ├── component/        # Reusable components
+│   └── layout/          # Layout templates
+├── static/              # Static assets
+├── uploads/             # User uploaded files
+└── go.mod              # Go module file
+```
+
+## API Endpoints
+
+### Authentication
+- `POST /auth/signup` - User registration
+- `POST /auth/login` - User login
+- `POST /auth/logout` - User logout
+- `POST /auth/forgot-password` - Request password reset
+- `POST /auth/reset-password` - Reset password
+- `GET /auth/verify/:token` - Verify email
+
+### Products
+- `GET /products` - List products
+- `GET /products/:id` - Get product details
+- `POST /products` - Create product (admin)
+- `PUT /products/:id` - Update product (admin)
+- `DELETE /products/:id` - Delete product (admin)
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- [Tailwind CSS](https://tailwindcss.com/) for the styling
+- [Templ](https://templ.guide/) for the template engine
+- [HTMX](https://htmx.org/) for dynamic interactions
