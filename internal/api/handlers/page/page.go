@@ -1,19 +1,24 @@
 package page
 
 import (
+	"net/http"
+
 	"github.com/a-h/templ"
 	"github.com/gin-gonic/gin"
 	"github.com/jimtrung/go-nexus/internal/infra/logger/zap"
+	"github.com/jimtrung/go-nexus/internal/services"
 	"github.com/jimtrung/go-nexus/templates/component"
 )
 
 type PageHandler struct {
-	Logger *zap.Logger
+	Logger      *zap.Logger
+	AuthService *services.AuthService
 }
 
-func NewPageLogger(logger *zap.Logger) *PageHandler {
+func NewPageLogger(logger *zap.Logger, authService *services.AuthService) *PageHandler {
 	return &PageHandler{
-		Logger: logger,
+		Logger:      logger,
+		AuthService: authService,
 	}
 }
 
@@ -41,6 +46,21 @@ func (h *PageHandler) RenderSignupPage(c *gin.Context) {
 }
 
 func (h *PageHandler) RenderProfilePage(c *gin.Context) {
-	// TODO: Add authentication middleware check
-	component.Profile().Render(c.Request.Context(), c.Writer)
+	userIDInt, exists := c.Get("user_id")
+	if !exists {
+		c.Redirect(http.StatusSeeOther, "/login")
+		return
+	}
+
+	userID := uint(userIDInt.(int))
+	user, err := h.AuthService.GetUserByID(userID)
+	if err != nil {
+		h.Logger.Error("Failed to get user info", err.Error())
+		c.Redirect(http.StatusSeeOther, "/login")
+		return
+	}
+
+	if err := Render(c, component.Profile(user)); err != nil {
+		h.Logger.Error(err.Error())
+	}
 }

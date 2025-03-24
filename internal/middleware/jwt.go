@@ -40,12 +40,12 @@ func RequireAuth(c *gin.Context) {
 		return
 	}
 
-	userID, ok := claims["sub"].(int)
+	userIDFloat, ok := claims["sub"].(float64)
 	if !ok {
 		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
-    c.Set("user_id", userID)
+	c.Set("user_id", int(userIDFloat))
 	c.Next()
 }

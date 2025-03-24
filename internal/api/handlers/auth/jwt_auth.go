@@ -67,14 +67,17 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	c.SetCookie("Authorization", token, 3600*4, "/", "", true, true)
 	h.Logger.Info(fmt.Sprintf("User %s login successfully", req.Username))
 
-	// Redirect to profile page after successful login
 	c.Header("HX-Redirect", "/profile")
-	c.JSON(http.StatusOK, gin.H{"success": true})
+	c.Status(http.StatusOK)
 }
 
 func (h *AuthHandler) Logout(c *gin.Context) {
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", "", -1, "/", "", true, true)
+	h.Logger.Info("User logged out successfully")
+
+	c.Header("HX-Redirect", "/login")
+	c.Status(http.StatusOK)
 }
 
 func (h *AuthHandler) ForgotPassword(c *gin.Context) {

@@ -33,23 +33,25 @@ func (h *AuthHandler) GetAuthCallBackFunction(c *gin.Context) {
 		return
 	}
 
-    userInfo, err := h.AuthService.SignupIfNotExist(user.Email)
-    if err != nil {
-        zap.NewLogger().Error("error", err.Error())
-        c.JSON(http.StatusInternalServerError, gin.H{
-            "error": err.Error(),
-        })
-        return
-    }
+	userInfo, err := h.AuthService.SignupIfNotExist(user.Email)
+	if err != nil {
+		zap.NewLogger().Error("error", err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
 
-    signedToken, err := h.AuthService.CreateSignedToken(userInfo.Username)
-    if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{
-            "error": "Failed to create a signed token",
-        })
-        return
-    }
+	signedToken, err := h.AuthService.CreateSignedToken(userInfo.UserID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to create a signed token",
+		})
+		return
+	}
 
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", signedToken, 3600*24, "/", "", false, true)
+
+	c.Redirect(http.StatusTemporaryRedirect, "/profile")
 }

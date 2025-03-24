@@ -1,13 +1,16 @@
 package component
 
-import "github.com/jimtrung/go-nexus/templates/layout"
+import (
+	"github.com/jimtrung/go-nexus/internal/domain"
+	"github.com/jimtrung/go-nexus/templates/layout"
+)
 
-templ Profile() {
+templ Profile(user *domain.User) {
     @layout.Base("Profile") {
         <header>
             <div class="flex items-center bg-[#1a2038] text-gray-200 py-3 px-6 justify-between fixed left-0 right-0 top-0 shadow-md z-50">
                 <div class="flex items-center">
-                    <a href="/" class="flex items-center">
+                    <a href="/" class="flex items-center cursor-pointer">
                         <img src="/static/img/logo.png" class="h-10" alt="GoNexus Logo">
                     </a>
                 </div>
@@ -18,7 +21,7 @@ templ Profile() {
                         hx-ext="json-enc" 
                         hx-target="body" 
                         hx-push-url="true"
-                        class="text-gray-200 hover:text-teal-300 transition duration-200"
+                        class="text-gray-200 hover:text-teal-300 transition duration-200 cursor-pointer"
                     >
                         Log out
                     </button>
@@ -41,11 +44,20 @@ templ Profile() {
                         <div class="flex-grow">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <h1 class="text-2xl font-bold text-gray-900" id="username">Username</h1>
-                                    <p class="text-gray-500" id="email">user@example.com</p>
+                                    <h1 class="text-2xl font-bold text-gray-900">{ user.Username }</h1>
+                                    <p class="text-gray-500">{ user.Email }</p>
+                                    if user.Verified {
+                                        <span class="inline-flex items-center mt-2 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            Verified
+                                        </span>
+                                    } else {
+                                        <span class="inline-flex items-center mt-2 px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                            Pending Verification
+                                        </span>
+                                    }
                                 </div>
                                 <button 
-                                    class="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-md transition duration-200"
+                                    class="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-md transition duration-200 cursor-pointer"
                                 >
                                     Edit Profile
                                 </button>
@@ -59,7 +71,7 @@ templ Profile() {
                                             <h3 class="font-medium text-gray-900">Two-Factor Authentication</h3>
                                             <p class="text-sm text-gray-500">Add an extra layer of security to your account</p>
                                         </div>
-                                        <button class="text-teal-500 hover:text-teal-600 font-medium">Enable</button>
+                                        <button class="text-teal-500 hover:text-teal-600 font-medium cursor-pointer">Enable</button>
                                     </div>
 
                                     <div class="flex items-center justify-between py-3 border-b">
@@ -67,7 +79,7 @@ templ Profile() {
                                             <h3 class="font-medium text-gray-900">Connected Accounts</h3>
                                             <p class="text-sm text-gray-500">Manage your connected social accounts</p>
                                         </div>
-                                        <button class="text-teal-500 hover:text-teal-600 font-medium">Manage</button>
+                                        <button class="text-teal-500 hover:text-teal-600 font-medium cursor-pointer">Manage</button>
                                     </div>
 
                                     <div class="flex items-center justify-between py-3">
@@ -75,7 +87,7 @@ templ Profile() {
                                             <h3 class="font-medium text-gray-900">Delete Account</h3>
                                             <p class="text-sm text-gray-500">Permanently delete your account and all data</p>
                                         </div>
-                                        <button class="text-red-500 hover:text-red-600 font-medium">Delete</button>
+                                        <button class="text-red-500 hover:text-red-600 font-medium cursor-pointer">Delete</button>
                                     </div>
                                 </div>
                             </div>

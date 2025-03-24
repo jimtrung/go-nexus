@@ -12,13 +12,17 @@ import (
 )
 
 type AuthService struct {
-    AuthRepo *repository.UserRepository
+	AuthRepo *repository.UserRepository
 }
 
 func NewAuthService(repo *repository.UserRepository) *AuthService {
-    return &AuthService{
-        AuthRepo: repo,
-    }
+	return &AuthService{
+		AuthRepo: repo,
+	}
+}
+
+func (s *AuthService) GetUserByID(userID uint) (*domain.User, error) {
+	return s.AuthRepo.GetByID(userID)
 }
 
 func (s *AuthService) SignUp(req *domain.User) error {
@@ -28,44 +32,44 @@ func (s *AuthService) SignUp(req *domain.User) error {
 
 	hashedPassword, err := HashPassword(req.Password)
 	if err != nil {
-        return err
+		return err
 	}
 
 	req.Password = hashedPassword
 	token := GenerateToken()
-    req.Token = token
+	req.Token = token
 
 	if err := s.AuthRepo.InsertIntoUsers(req); err != nil {
-        return err
+		return err
 	}
 
 	SendVerificationEmail(req.Email, token)
-    return nil
+	return nil
 }
 
 func (s *AuthService) Login(req *domain.User) (string, error) {
-    user, err := s.AuthRepo.GetByUsername(req.Username)
-    if err != nil {
-        return "", err
-    }
+	user, err := s.AuthRepo.GetByUsername(req.Username)
+	if err != nil {
+		return "", err
+	}
 
-    if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
-        return "", fmt.Errorf("Wrong password")
-    }
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
+		return "", fmt.Errorf("Wrong password")
+	}
 
-    return s.CreateSignedToken(user.Username)
+	return s.CreateSignedToken(user.UserID)
 }
 
 func (s *AuthService) ForgotPassword(req *domain.User) error {
 	if !IsValidEmail(req.Email) || !HasMXRecord(req.Email) {
-        return fmt.Errorf("Invalid email")
+		return fmt.Errorf("Invalid email")
 	}
 
 	token := GenerateToken()
 	req.Token = token
 
 	if err := s.AuthRepo.AddToken(req.Email, req.Token); err != nil {
-        return fmt.Errorf("Failed to add token to user: %v", err)
+		return fmt.Errorf("Failed to add token to user: %v", err)
 	}
 
 	ResetPasswordEmail(req.Email, req.Token)
@@ -73,12 +77,12 @@ func (s *AuthService) ForgotPassword(req *domain.User) error {
 		time.Sleep(time.Second * 300)
 		s.AuthRepo.DeleteToken(req.Token)
 	}()
-    return nil
+	return nil
 }
 
-func (s *AuthService) CreateSignedToken(username string) (string, error) {
+func (s *AuthService) CreateSignedToken(userID uint) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": username,
+		"sub": userID,
 		"exp": time.Now().Add(time.Hour * 4).Unix(),
 	})
 
@@ -108,9 +112,9 @@ func (s *AuthService) SignupIfNotExist(email string) (*domain.User, error) {
 		Verified: true,
 		Password: hashedPassword,
 	}
-    if err := s.AuthRepo.InsertIntoUsers(userInfo); err != nil {
+	if err := s.AuthRepo.InsertIntoUsers(userInfo); err != nil {
 		return &domain.User{}, err
-    }
+	}
 
 	return userInfo, nil
 }
