@@ -1,0 +1,1 @@
+DROP TRIGGER IF EXISTS friends_update_timestamp ON friends;
