@@ -69,6 +69,36 @@ GoNexus is a next-generation **multi-purpose digital ecosystem** that seamlessly
 3. **Launch Learning & Productivity Tools** – Enable education and business collaboration
 4. **Global Expansion & Monetization** – Scale to wider audiences and optimize revenue streams
 
+## 🔧 How to Run
+
+### Prerequisites
+- Install **Golang** (https://go.dev/dl/)
+- Install **Air** (Live reload for Golang):
+  ```sh
+  go install github.com/cosmtrek/air@latest
+  ```
+- Install **PostgreSQL** and ensure it is running
+- Install **Redis** for caching
+
+### Clone the Repository
+```sh
+git clone https://github.com/jimtrung/go-nexus.git
+cd gonexus
+```
+
+### Configure Environment Variables
+Create a `.env` file and set the required configurations:
+```env
+DATABASE_URL=postgres://user:password@localhost:5432/gonexus
+PORT=8080
+```
+
+### Run the Project with Air
+```sh
+air
+```
+This will start the GoNexus server with live reload enabled.
+
 ## 📜 License
 GoNexus is an open-source project (license TBD). Contributions are welcome!
 
@@ -78,5 +108,3 @@ Interested in contributing? Check out the contribution guidelines and join our c
 ---
 
 Built with ❤️ using **GOTTH** (Golang, Templ, TailwindCSS, HTMX)
-
-

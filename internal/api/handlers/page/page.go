@@ -18,11 +18,24 @@ func NewPageLogger(logger *zap.Logger) *PageHandler {
 }
 
 func Render(c *gin.Context, component templ.Component) error {
+	c.Header("Content-Type", "text/html")
 	return component.Render(c.Request.Context(), c.Writer)
 }
 
 func (h *PageHandler) RenderHomePage(c *gin.Context) {
-    if err := Render(c, component.Home()); err != nil {
-        h.Logger.Error(err.Error())
-    }
+	if err := Render(c, component.Home()); err != nil {
+		h.Logger.Error(err.Error())
+	}
+}
+
+func (h *PageHandler) RenderLoginPage(c *gin.Context) {
+	if err := Render(c, component.Login()); err != nil {
+		h.Logger.Error(err.Error())
+	}
+}
+
+func (h *PageHandler) RenderSignupPage(c *gin.Context) {
+	if err := Render(c, component.Signup()); err != nil {
+		h.Logger.Error(err.Error())
+	}
 }

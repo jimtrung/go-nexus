@@ -8,21 +8,23 @@ import (
 )
 
 func (r *Routes) SetupAuthRoutes(logger *zap.Logger) {
-    authRepo := repository.NewUserRepository(r.Conn)
-    authServices := services.NewAuthService(authRepo)
-    authHandlers := authHandlers.NewAuthHandler(authServices, logger)
-    auth := r.Router.Group("/auth")
-    {
-        auth.GET("/:provider", authHandlers.BeginAuthProviderCallback)
-        auth.GET("/:provider/callback", authHandlers.GetAuthCallBackFunction)
+	authRepo := repository.NewUserRepository(r.Conn)
+	authServices := services.NewAuthService(authRepo)
+	authHandlers := authHandlers.NewAuthHandler(authServices, logger)
 
-        auth.POST("/signup", authHandlers.Signup)
-        auth.POST("/login", authHandlers.Login)
-        auth.GET("/logout", authHandlers.Logout)
+	// API auth routes
+	auth := r.Router.Group("/auth")
+	{
+		auth.GET("/:provider", authHandlers.BeginAuthProviderCallback)
+		auth.GET("/:provider/callback", authHandlers.GetAuthCallBackFunction)
 
-        auth.POST("/forgot-password", authHandlers.ForgotPassword)
-        auth.POST("/reset-password", authHandlers.ResetPassword)
+		auth.POST("/signup", authHandlers.Signup)
+		auth.POST("/login", authHandlers.Login)
+		auth.GET("/logout", authHandlers.Logout)
 
-        auth.GET("/verify/:token", authHandlers.Verify)
-    }
+		auth.POST("/forgot-password", authHandlers.ForgotPassword)
+		auth.POST("/reset-password", authHandlers.ResetPassword)
+
+		auth.GET("/verify/:token", authHandlers.Verify)
+	}
 }
