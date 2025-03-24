@@ -115,8 +115,8 @@ func (h *AuthHandler) ResetPassword(c *gin.Context) {
 	}
 
 	if req.Password != req.ConfirmPassword {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Password do not match",
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Passwords do not match",
 		})
 		h.Logger.Error("Password do not match")
 		return
@@ -125,7 +125,7 @@ func (h *AuthHandler) ResetPassword(c *gin.Context) {
 	hash, err := services.HashPassword(req.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
+			"error": "Failed to hash password",
 		})
 		h.Logger.Error(err.Error())
 		return
@@ -133,15 +133,16 @@ func (h *AuthHandler) ResetPassword(c *gin.Context) {
 
 	if err := h.AuthService.AuthRepo.UpdatePassword(req.Token, hash); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
+			"error": "Reset link may have expired",
 		})
 		h.Logger.Error(err.Error())
 		return
 	}
 
 	h.Logger.Info("Reset password successfully")
+	c.Header("HX-Redirect", "/login")
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Reset password successfully",
+		"message": "Password has been reset successfully",
 	})
 }
 

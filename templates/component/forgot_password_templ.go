@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "github.com/jimtrung/go-nexus/templates/layout"
 
-func Login() templ.Component {
+func ForgotPassword() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -47,7 +47,7 @@ func Login() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, " <div class=\"min-h-screen pt-28 pb-20 flex flex-col items-center bg-gray-50\"><div class=\"w-full max-w-md px-6\"><div class=\"text-center mb-10\"><h1 class=\"text-3xl font-bold text-[#1a2038] mb-2\">Welcome Back</h1><p class=\"text-gray-600\">Sign in to your account</p></div><div class=\"bg-white rounded-xl shadow-md p-8\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, " <div class=\"min-h-screen pt-28 pb-20 flex flex-col items-center bg-gray-50\"><div class=\"w-full max-w-md px-6\"><div class=\"text-center mb-10\"><h1 class=\"text-3xl font-bold text-[#1a2038] mb-2\">Forgot Password?</h1><p class=\"text-gray-600\">Enter your email to reset your password</p></div><div class=\"bg-white rounded-xl shadow-md p-8\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -55,29 +55,33 @@ func Login() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<form hx-post=\"/auth/login\" hx-ext=\"json-enc\" hx-target=\"#message-container\" hx-swap=\"innerHTML\"><div class=\"space-y-6\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<form hx-post=\"/auth/forgot-password\" hx-ext=\"json-enc\" hx-target=\"#message-container\" hx-swap=\"innerHTML\"><div class=\"space-y-6\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = FormInput("Username", "username", "username", "text", "Enter your username", true).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = FormInput("Email Address", "email", "email", "email", "Enter your email", true).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = FormInput("Password", "password", "password", "password", "••••••••", true).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = SubmitButton("Send Reset Link").Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = SubmitButton("Sign In").Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div></form>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div></form><div class=\"mt-8 text-center\"><p class=\"text-sm text-gray-600\">Don't have an account? <a href=\"/signup\" class=\"font-semibold text-teal-500 hover:text-teal-600 transition duration-200\">Sign up</a></p><p class=\"mt-2 text-sm text-gray-600\"><a href=\"/forgot-password\" class=\"font-semibold text-teal-500 hover:text-teal-600 transition duration-200\">Forgot your password?</a></p></div></div></div></div>")
+			templ_7745c5c3_Err = BackToLogin().Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = layout.Base("Login").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = layout.Base("Forgot Password").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

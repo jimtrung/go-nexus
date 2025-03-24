@@ -19,4 +19,6 @@ func (r *Routes) SetupPageRoutes(logger *zap.Logger) {
 	r.Router.GET("/login", pageHandler.RenderLoginPage)
 	r.Router.GET("/signup", pageHandler.RenderSignupPage)
 	r.Router.GET("/profile", middleware.RequireAuth, pageHandler.RenderProfilePage)
+	r.Router.GET("/forgot-password", pageHandler.RenderForgotPasswordPage)
+	r.Router.GET("/reset-password/:token", pageHandler.RenderResetPasswordPage)
 }

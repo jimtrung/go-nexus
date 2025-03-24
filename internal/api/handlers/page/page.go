@@ -64,3 +64,21 @@ func (h *PageHandler) RenderProfilePage(c *gin.Context) {
 		h.Logger.Error(err.Error())
 	}
 }
+
+func (h *PageHandler) RenderForgotPasswordPage(c *gin.Context) {
+	if err := Render(c, component.ForgotPassword()); err != nil {
+		h.Logger.Error(err.Error())
+	}
+}
+
+func (h *PageHandler) RenderResetPasswordPage(c *gin.Context) {
+	token := c.Param("token")
+	if token == "" {
+		c.Redirect(http.StatusSeeOther, "/login")
+		return
+	}
+
+	if err := Render(c, component.ResetPassword(component.ResetPasswordProps{Token: token})); err != nil {
+		h.Logger.Error(err.Error())
+	}
+}

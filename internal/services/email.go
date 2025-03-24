@@ -14,7 +14,7 @@ import (
 )
 
 func IsValidEmail(email string) bool {
-    return true
+	return true
 }
 
 func HasMXRecord(email string) bool {
@@ -63,6 +63,6 @@ func SendVerificationEmail(email, token string) {
 }
 
 func ResetPasswordEmail(email, token string) {
-	body := fmt.Sprintf("Click here to reset password: http://127.0.0.1:8080/auth/reset-password")
+	body := fmt.Sprintf("Click here to reset password: http://127.0.0.1:8080/reset-password/%s", token)
 	go SendEmail(email, "Reset Password", body)
 }
