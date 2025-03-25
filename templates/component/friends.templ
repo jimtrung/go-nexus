@@ -18,10 +18,10 @@ type Friend struct {
 }
 
 type FriendsProps struct {
-    User            *domain.User
-    Friends         []Friend
-    PendingRequests []Friend
-    IncomingRequests []Friend
+    User             *domain.User
+    Friends          []Friend
+    PendingRequests  []Friend
+    SentRequests     []Friend
 }
 
 templ FriendListItem(friend Friend) {
@@ -31,7 +31,7 @@ templ FriendListItem(friend Friend) {
             hx-delete={ fmt.Sprintf("/friends/remove/%d", friend.FriendID) }
             hx-target="closest div"
             hx-swap="outerHTML"
-            class="text-red-500 hover:text-red-700 transition duration-200"
+            class="text-red-500 hover:text-red-700 transition duration-200 cursor-pointer"
         >
             Remove
         </button>
@@ -46,7 +46,7 @@ templ IncomingRequestItem(request Friend) {
                 hx-post={ fmt.Sprintf("/friends/accept/%d", request.FriendID) }
                 hx-target="closest div"
                 hx-swap="outerHTML"
-                class="text-teal-500 hover:text-teal-700 transition duration-200"
+                class="text-teal-500 hover:text-teal-700 transition duration-200 cursor-pointer"
             >
                 Accept
             </button>
@@ -54,7 +54,7 @@ templ IncomingRequestItem(request Friend) {
                 hx-delete={ fmt.Sprintf("/friends/reject/%d", request.FriendID) }
                 hx-target="closest div"
                 hx-swap="outerHTML"
-                class="text-red-500 hover:text-red-700 transition duration-200"
+                class="text-red-500 hover:text-red-700 transition duration-200 cursor-pointer"
             >
                 Reject
             </button>
@@ -66,14 +66,91 @@ templ SentRequestItem(request Friend) {
     <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
         @UserCard(request.Username, request.Avatar, "", request.CreatedAt, false)
         <button
-            hx-delete={ fmt.Sprintf("/friends/cancel/%d", request.FriendID) }
+            hx-delete={ fmt.Sprintf("/friends/cancel/%d", request.SenderID) }
             hx-target="closest div"
             hx-swap="outerHTML"
-            class="text-red-500 hover:text-red-700 transition duration-200"
+            class="text-red-500 hover:text-red-700 transition duration-200 cursor-pointer"
         >
             Cancel
         </button>
     </div>
+}
+
+templ SendFriendRequestForm() {
+    <div class="bg-white rounded-xl shadow-md p-8 mb-6" id="friend-request-form">
+        <h2 class="text-xl font-semibold mb-4 text-[#1a2038]">Add New Friend</h2>
+        <form
+            hx-post="/friends/request"
+            hx-ext="json-enc"
+            hx-target="#request-result"
+            hx-on::after-request="handleFriendRequestResponse(event)"
+            class="space-y-4"
+        >
+            <div class="flex flex-col space-y-4">
+                <label for="receiver_id" class="text-sm font-medium text-gray-700">User ID</label>
+                <div class="flex items-center space-x-2">
+                    <div class="flex-grow">
+                        <input
+                            type="number"
+                            id="receiver_id"
+                            name="receiver_id"
+                            placeholder="Enter user ID"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-teal-400 transition duration-200"
+                            required
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        class="bg-teal-500 hover:bg-teal-600 text-white px-4 py-3 rounded-md font-semibold transition duration-200 whitespace-nowrap"
+                    >
+                        Send Request
+                    </button>
+                </div>
+            </div>
+            <div id="request-result" class="mt-2 p-3 hidden rounded-md"></div>
+        </form>
+        <div class="mt-4 text-sm text-gray-600">
+            <p>To send a friend request, enter the user ID of the person you want to connect with.</p>
+            <p class="mt-1">You can find the user ID by asking them to check their profile page.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('htmx:configRequest', function(evt) {
+            const form = evt.detail.elt.closest('form');
+            if (form && form.getAttribute('hx-post') === '/friends/request') {
+                const receiverId = document.getElementById('receiver_id').value;
+                evt.detail.parameters = {
+                    receiver_id: parseInt(receiverId, 10)
+                };
+            }
+        });
+
+        function handleFriendRequestResponse(event) {
+            const requestResult = document.getElementById('request-result');
+            requestResult.classList.remove('hidden', 'bg-green-50', 'bg-red-50', 'text-green-800', 'text-red-800');
+            
+            try {
+                const response = JSON.parse(event.detail.xhr.response);
+                
+                if (event.detail.xhr.status === 201) {
+                    requestResult.classList.add('bg-green-50', 'text-green-800');
+                    requestResult.textContent = response.message || "Friend request sent successfully!";
+                    document.getElementById('receiver_id').value = '';
+                    
+                    setTimeout(() => {
+                        htmx.trigger("#friend-request-form", "request-sent");
+                    }, 2000);
+                } else {
+                    requestResult.classList.add('bg-red-50', 'text-red-800');
+                    requestResult.textContent = response.error || "Failed to send friend request. Please try again.";
+                }
+            } catch (e) {
+                requestResult.classList.add('bg-red-50', 'text-red-800');
+                requestResult.textContent = "An unexpected error occurred. Please try again.";
+            }
+        }
+    </script>
 }
 
 templ Friends(props FriendsProps) {
@@ -83,6 +160,8 @@ templ Friends(props FriendsProps) {
         <div class="min-h-screen pt-28 pb-20 flex flex-col items-center bg-gray-50">
             <div class="w-full max-w-6xl px-6">
                 @PageTitle("Friends", "Manage your connections")
+                
+                @SendFriendRequestForm()
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @CardContainer("Friends") {
@@ -96,24 +175,31 @@ templ Friends(props FriendsProps) {
                     }
 
                     @CardContainer("Incoming Requests") {
-                        if len(props.IncomingRequests) == 0 {
+                        if len(props.PendingRequests) == 0 {
                             <p class="text-gray-500">No incoming requests</p>
                         } else {
-                            for _, request := range props.IncomingRequests {
+                            for _, request := range props.PendingRequests {
                                 @IncomingRequestItem(request)
                             }
                         }
                     }
 
-                    @CardContainer("Sent Requests") {
-                        if len(props.PendingRequests) == 0 {
-                            <p class="text-gray-500">No sent requests</p>
-                        } else {
-                            for _, request := range props.PendingRequests {
-                                @SentRequestItem(request)
+                    <div 
+                        id="sent-requests-container"
+                        hx-get="/friends/requests"
+                        hx-trigger="request-sent from:body"
+                        hx-swap="outerHTML"
+                    >
+                        @CardContainer("Sent Requests") {
+                            if len(props.SentRequests) == 0 {
+                                <p class="text-gray-500">No sent requests</p>
+                            } else {
+                                for _, request := range props.SentRequests {
+                                    @SentRequestItem(request)
+                                }
                             }
                         }
-                    }
+                    </div>
                 </div>
             </div>
         </div>

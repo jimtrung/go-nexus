@@ -19,9 +19,10 @@ func NewFriendRepository(conn *pgx.Conn) *FriendRepository {
 
 func (r *FriendRepository) GetAll(userID uint) ([]domain.Friend, error) {
 	rows, err := r.conn.Query(
-		context.Background(), 
+		context.Background(),
 		`SELECT sender_id, receiver_id, status, created_at, updated_at FROM friends
-		WHERE sender_id = $1 OR receiver_id = $1`,
+		WHERE (sender_id = $1 OR receiver_id = $1)
+		AND status = 'accepted'`,
 		userID,
 	)
 	if err != nil {
@@ -104,6 +105,31 @@ func (r *FriendRepository) GetRequests(userID uint) ([]domain.Friend, error) {
 		context.Background(),
 		`SELECT sender_id, receiver_id, status, created_at, updated_at FROM friends
 		WHERE receiver_id = $1 AND status = 'pending'`,
+		userID,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	friends := []domain.Friend{}
+	for rows.Next() {
+		var friend domain.Friend
+		err := rows.Scan(&friend.SenderID, &friend.ReceiverID, &friend.Status, &friend.CreatedAt, &friend.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+		friends = append(friends, friend)
+	}
+
+	return friends, nil
+}
+
+func (r *FriendRepository) GetSentRequests(userID uint) ([]domain.Friend, error) {
+	rows, err := r.conn.Query(
+		context.Background(),
+		`SELECT sender_id, receiver_id, status, created_at, updated_at FROM friends
+		WHERE sender_id = $1 AND status = 'pending'`,
 		userID,
 	)
 	if err != nil {

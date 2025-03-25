@@ -1,26 +1,27 @@
 package page
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/a-h/templ"
 	"github.com/gin-gonic/gin"
+	"github.com/jimtrung/go-nexus/internal/domain"
 	"github.com/jimtrung/go-nexus/internal/infra/logger/zap"
 	"github.com/jimtrung/go-nexus/internal/services"
 	"github.com/jimtrung/go-nexus/templates/component"
-	"github.com/jimtrung/go-nexus/internal/domain"
 )
 
 type PageHandler struct {
-	Logger       *zap.Logger
-	AuthService  *services.AuthService
+	Logger        *zap.Logger
+	AuthService   *services.AuthService
 	FriendService *services.FriendService
 }
 
 func NewPageHandler(logger *zap.Logger, authService *services.AuthService, friendService *services.FriendService) *PageHandler {
 	return &PageHandler{
-		Logger:       logger,
-		AuthService:  authService,
+		Logger:        logger,
+		AuthService:   authService,
 		FriendService: friendService,
 	}
 }
@@ -126,18 +127,18 @@ func (h *PageHandler) RenderFriendsPage(c *gin.Context) {
 		return
 	}
 
-	incomingRequests, err := h.FriendService.GetPendingRequests(userID)
+	sentRequests, err := h.FriendService.GetSentRequests(userID)
 	if err != nil {
-		h.Logger.Error("Failed to get incoming requests", err.Error())
+		h.Logger.Error("Failed to get sent requests", err.Error())
 		c.Redirect(http.StatusSeeOther, "/p/login")
 		return
 	}
 
 	friendsProps := component.FriendsProps{
-		User:             user,
-		Friends:          make([]component.Friend, len(friends)),
-		PendingRequests:  make([]component.Friend, len(pendingRequests)),
-		IncomingRequests: make([]component.Friend, len(incomingRequests)),
+		User:            user,
+		Friends:         make([]component.Friend, len(friends)),
+		PendingRequests: make([]component.Friend, len(pendingRequests)),
+		SentRequests:    make([]component.Friend, len(sentRequests)),
 	}
 
 	for i, friend := range friends {
@@ -166,8 +167,8 @@ func (h *PageHandler) RenderFriendsPage(c *gin.Context) {
 		}
 	}
 
-	for i, request := range incomingRequests {
-		friendsProps.IncomingRequests[i] = component.Friend{
+	for i, request := range sentRequests {
+		friendsProps.SentRequests[i] = component.Friend{
 			FriendID:   request.FriendID,
 			SenderID:   request.SenderID,
 			ReceiverID: request.ReceiverID,
@@ -178,6 +179,8 @@ func (h *PageHandler) RenderFriendsPage(c *gin.Context) {
 			Avatar:     "https://ui-avatars.com/api/?name=User&background=random",
 		}
 	}
+
+	fmt.Println("friendsProps", friendsProps)
 
 	if err := Render(c, component.Friends(friendsProps)); err != nil {
 		h.Logger.Error(err.Error())

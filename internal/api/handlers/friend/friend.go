@@ -1,12 +1,13 @@
 package friend
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
+	"github.com/jimtrung/go-nexus/internal/domain"
 	"github.com/jimtrung/go-nexus/internal/infra/logger/zap"
 	"github.com/jimtrung/go-nexus/internal/services"
-	"net/http"
-	"github.com/jimtrung/go-nexus/internal/domain"
-	"strconv"
 )
 
 type FriendHandler struct {
@@ -22,7 +23,13 @@ func NewFriendHandler(friendService *services.FriendService, logger *zap.Logger)
 }
 
 func (h *FriendHandler) CreateRequest(c *gin.Context) {
-	userID := c.GetUint("user_id")
+	userIDInt, exists := c.Get("user_id")
+	if !exists {
+		c.Redirect(http.StatusSeeOther, "/p/login")
+		return
+	}
+
+	userID := uint(userIDInt.(int))
 
 	req := &domain.Friend{}
 	if err := c.BindJSON(req); err != nil {
@@ -49,7 +56,13 @@ func (h *FriendHandler) CreateRequest(c *gin.Context) {
 }
 
 func (h *FriendHandler) GetAllFriends(c *gin.Context) {
-	userID := c.GetUint("user_id")
+	userIDInt, exists := c.Get("user_id")
+	if !exists {
+		c.Redirect(http.StatusSeeOther, "/p/login")
+		return
+	}
+
+	userID := uint(userIDInt.(int))
 
 	friends, err := h.FriendService.GetAllFriends(userID)
 	if err != nil {
@@ -67,7 +80,13 @@ func (h *FriendHandler) GetAllFriends(c *gin.Context) {
 }
 
 func (h *FriendHandler) GetPendingRequests(c *gin.Context) {
-	userID := c.GetUint("user_id")
+	userIDInt, exists := c.Get("user_id")
+	if !exists {
+		c.Redirect(http.StatusSeeOther, "/p/login")
+		return
+	}
+
+	userID := uint(userIDInt.(int))
 
 	requests, err := h.FriendService.GetPendingRequests(userID)
 	if err != nil {
@@ -85,7 +104,13 @@ func (h *FriendHandler) GetPendingRequests(c *gin.Context) {
 }
 
 func (h *FriendHandler) AcceptRequest(c *gin.Context) {
-	userID := c.GetUint("user_id")
+	userIDInt, exists := c.Get("user_id")
+	if !exists {
+		c.Redirect(http.StatusSeeOther, "/p/login")
+		return
+	}
+
+	userID := uint(userIDInt.(int))
 
 	req := &domain.Friend{}
 	if err := c.BindJSON(req); err != nil {
@@ -96,7 +121,7 @@ func (h *FriendHandler) AcceptRequest(c *gin.Context) {
 		return
 	}
 	req.ReceiverID = userID
-	
+
 	if err := h.FriendService.AcceptRequest(req); err != nil {
 		h.Logger.Error("Failed to accept request", err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -112,7 +137,13 @@ func (h *FriendHandler) AcceptRequest(c *gin.Context) {
 }
 
 func (h *FriendHandler) RejectRequest(c *gin.Context) {
-	userID := c.GetUint("user_id")
+	userIDInt, exists := c.Get("user_id")
+	if !exists {
+		c.Redirect(http.StatusSeeOther, "/p/login")
+		return
+	}
+
+	userID := uint(userIDInt.(int))
 
 	req := &domain.Friend{}
 	if err := c.BindJSON(req); err != nil {
@@ -123,7 +154,7 @@ func (h *FriendHandler) RejectRequest(c *gin.Context) {
 		return
 	}
 	req.ReceiverID = userID
-	
+
 	if err := h.FriendService.RejectRequest(req); err != nil {
 		h.Logger.Error("Failed to reject request", err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -139,7 +170,13 @@ func (h *FriendHandler) RejectRequest(c *gin.Context) {
 }
 
 func (h *FriendHandler) CancelRequest(c *gin.Context) {
-	userID := c.GetUint("user_id")
+	userIDInt, exists := c.Get("user_id")
+	if !exists {
+		c.Redirect(http.StatusSeeOther, "/p/login")
+		return
+	}
+
+	userID := uint(userIDInt.(int))
 	receiverIDString := c.Param("receiver_id")
 	receiverID64, err := strconv.ParseUint(receiverIDString, 10, 64)
 	receiverID := uint(receiverID64)
@@ -152,7 +189,7 @@ func (h *FriendHandler) CancelRequest(c *gin.Context) {
 	}
 
 	req := &domain.Friend{
-		SenderID: userID,
+		SenderID:   userID,
 		ReceiverID: receiverID,
 	}
 
@@ -162,7 +199,7 @@ func (h *FriendHandler) CancelRequest(c *gin.Context) {
 			"error": "Failed to cancel request",
 		})
 		return
-	}	
+	}
 
 	h.Logger.Info("Request canceled successfully")
 	c.JSON(http.StatusOK, gin.H{
@@ -171,7 +208,13 @@ func (h *FriendHandler) CancelRequest(c *gin.Context) {
 }
 
 func (h *FriendHandler) RemoveFriend(c *gin.Context) {
-	userID := c.GetUint("user_id")
+	userIDInt, exists := c.Get("user_id")
+	if !exists {
+		c.Redirect(http.StatusSeeOther, "/p/login")
+		return
+	}
+
+	userID := uint(userIDInt.(int))
 	receiverIDString := c.Param("receiver_id")
 	receiverID64, err := strconv.ParseUint(receiverIDString, 10, 64)
 	receiverID := uint(receiverID64)
@@ -183,10 +226,10 @@ func (h *FriendHandler) RemoveFriend(c *gin.Context) {
 		return
 	}
 	req := &domain.Friend{
-		SenderID: userID,
+		SenderID:   userID,
 		ReceiverID: receiverID,
 	}
-	
+
 	if err := h.FriendService.RemoveFriend(req); err != nil {
 		h.Logger.Error("Failed to remove friend", err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{

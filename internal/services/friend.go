@@ -40,3 +40,7 @@ func (s *FriendService) GetPendingRequests(userID uint) ([]domain.Friend, error)
 func (s *FriendService) RemoveFriend(friend *domain.Friend) error {
 	return s.friendRepository.Delete(friend)
 }
+
+func (s *FriendService) GetSentRequests(userID uint) ([]domain.Friend, error) {
+	return s.friendRepository.GetSentRequests(userID)
+}

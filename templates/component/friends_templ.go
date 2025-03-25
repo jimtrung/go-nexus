@@ -26,10 +26,10 @@ type Friend struct {
 }
 
 type FriendsProps struct {
-	User             *domain.User
-	Friends          []Friend
-	PendingRequests  []Friend
-	IncomingRequests []Friend
+	User            *domain.User
+	Friends         []Friend
+	PendingRequests []Friend
+	SentRequests    []Friend
 }
 
 func FriendListItem(friend Friend) templ.Component {
@@ -74,7 +74,7 @@ func FriendListItem(friend Friend) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" hx-target=\"closest div\" hx-swap=\"outerHTML\" class=\"text-red-500 hover:text-red-700 transition duration-200\">Remove</button></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" hx-target=\"closest div\" hx-swap=\"outerHTML\" class=\"text-red-500 hover:text-red-700 transition duration-200 cursor-pointer\">Remove</button></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -124,7 +124,7 @@ func IncomingRequestItem(request Friend) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" hx-target=\"closest div\" hx-swap=\"outerHTML\" class=\"text-teal-500 hover:text-teal-700 transition duration-200\">Accept</button> <button hx-delete=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" hx-target=\"closest div\" hx-swap=\"outerHTML\" class=\"text-teal-500 hover:text-teal-700 transition duration-200 cursor-pointer\">Accept</button> <button hx-delete=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -137,7 +137,7 @@ func IncomingRequestItem(request Friend) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" hx-target=\"closest div\" hx-swap=\"outerHTML\" class=\"text-red-500 hover:text-red-700 transition duration-200\">Reject</button></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" hx-target=\"closest div\" hx-swap=\"outerHTML\" class=\"text-red-500 hover:text-red-700 transition duration-200 cursor-pointer\">Reject</button></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -179,7 +179,7 @@ func SentRequestItem(request Friend) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var7 string
-		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/friends/cancel/%d", request.FriendID))
+		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/friends/cancel/%d", request.SenderID))
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/component/friends.templ`, Line: 69, Col: 75}
 		}
@@ -187,7 +187,36 @@ func SentRequestItem(request Friend) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" hx-target=\"closest div\" hx-swap=\"outerHTML\" class=\"text-red-500 hover:text-red-700 transition duration-200\">Cancel</button></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" hx-target=\"closest div\" hx-swap=\"outerHTML\" class=\"text-red-500 hover:text-red-700 transition duration-200 cursor-pointer\">Cancel</button></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func SendFriendRequestForm() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var8 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var8 == nil {
+			templ_7745c5c3_Var8 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div class=\"bg-white rounded-xl shadow-md p-8 mb-6\" id=\"friend-request-form\"><h2 class=\"text-xl font-semibold mb-4 text-[#1a2038]\">Add New Friend</h2><form hx-post=\"/friends/request\" hx-ext=\"json-enc\" hx-target=\"#request-result\" hx-on::after-request=\"handleFriendRequestResponse(event)\" class=\"space-y-4\"><div class=\"flex flex-col space-y-4\"><label for=\"receiver_id\" class=\"text-sm font-medium text-gray-700\">User ID</label><div class=\"flex items-center space-x-2\"><div class=\"flex-grow\"><input type=\"number\" id=\"receiver_id\" name=\"receiver_id\" placeholder=\"Enter user ID\" class=\"w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-teal-400 transition duration-200\" required></div><button type=\"submit\" class=\"bg-teal-500 hover:bg-teal-600 text-white px-4 py-3 rounded-md font-semibold transition duration-200 whitespace-nowrap\">Send Request</button></div></div><div id=\"request-result\" class=\"mt-2 p-3 hidden rounded-md\"></div></form><div class=\"mt-4 text-sm text-gray-600\"><p>To send a friend request, enter the user ID of the person you want to connect with.</p><p class=\"mt-1\">You can find the user ID by asking them to check their profile page.</p></div></div><script>\n        document.addEventListener('htmx:configRequest', function(evt) {\n            const form = evt.detail.elt.closest('form');\n            if (form && form.getAttribute('hx-post') === '/friends/request') {\n                const receiverId = document.getElementById('receiver_id').value;\n                evt.detail.parameters = {\n                    receiver_id: parseInt(receiverId, 10)\n                };\n            }\n        });\n\n        function handleFriendRequestResponse(event) {\n            const requestResult = document.getElementById('request-result');\n            requestResult.classList.remove('hidden', 'bg-green-50', 'bg-red-50', 'text-green-800', 'text-red-800');\n            \n            try {\n                const response = JSON.parse(event.detail.xhr.response);\n                \n                if (event.detail.xhr.status === 201) {\n                    requestResult.classList.add('bg-green-50', 'text-green-800');\n                    requestResult.textContent = response.message || \"Friend request sent successfully!\";\n                    document.getElementById('receiver_id').value = '';\n                    \n                    setTimeout(() => {\n                        htmx.trigger(\"#friend-request-form\", \"request-sent\");\n                    }, 2000);\n                } else {\n                    requestResult.classList.add('bg-red-50', 'text-red-800');\n                    requestResult.textContent = response.error || \"Failed to send friend request. Please try again.\";\n                }\n            } catch (e) {\n                requestResult.classList.add('bg-red-50', 'text-red-800');\n                requestResult.textContent = \"An unexpected error occurred. Please try again.\";\n            }\n        }\n    </script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -211,12 +240,12 @@ func Friends(props FriendsProps) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var8 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var8 == nil {
-			templ_7745c5c3_Var8 = templ.NopComponent
+		templ_7745c5c3_Var9 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var9 == nil {
+			templ_7745c5c3_Var9 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Var9 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_Var10 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
 			if !templ_7745c5c3_IsBuffer {
@@ -232,7 +261,7 @@ func Friends(props FriendsProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, " <div class=\"min-h-screen pt-28 pb-20 flex flex-col items-center bg-gray-50\"><div class=\"w-full max-w-6xl px-6\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, " <div class=\"min-h-screen pt-28 pb-20 flex flex-col items-center bg-gray-50\"><div class=\"w-full max-w-6xl px-6\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -240,38 +269,11 @@ func Friends(props FriendsProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<div class=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6\">")
+			templ_7745c5c3_Err = SendFriendRequestForm().Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Var10 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-				if !templ_7745c5c3_IsBuffer {
-					defer func() {
-						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-						if templ_7745c5c3_Err == nil {
-							templ_7745c5c3_Err = templ_7745c5c3_BufErr
-						}
-					}()
-				}
-				ctx = templ.InitializeContext(ctx)
-				if len(props.Friends) == 0 {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<p class=\"text-gray-500\">No friends yet</p>")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-				} else {
-					for _, friend := range props.Friends {
-						templ_7745c5c3_Err = FriendListItem(friend).Render(ctx, templ_7745c5c3_Buffer)
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-					}
-				}
-				return nil
-			})
-			templ_7745c5c3_Err = CardContainer("Friends").Render(templ.WithChildren(ctx, templ_7745c5c3_Var10), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<div class=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -287,14 +289,14 @@ func Friends(props FriendsProps) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				if len(props.IncomingRequests) == 0 {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<p class=\"text-gray-500\">No incoming requests</p>")
+				if len(props.Friends) == 0 {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<p class=\"text-gray-500\">No friends yet</p>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				} else {
-					for _, request := range props.IncomingRequests {
-						templ_7745c5c3_Err = IncomingRequestItem(request).Render(ctx, templ_7745c5c3_Buffer)
+					for _, friend := range props.Friends {
+						templ_7745c5c3_Err = FriendListItem(friend).Render(ctx, templ_7745c5c3_Buffer)
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
@@ -302,7 +304,7 @@ func Friends(props FriendsProps) templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = CardContainer("Incoming Requests").Render(templ.WithChildren(ctx, templ_7745c5c3_Var11), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = CardContainer("Friends").Render(templ.WithChildren(ctx, templ_7745c5c3_Var11), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -319,12 +321,47 @@ func Friends(props FriendsProps) templ.Component {
 				}
 				ctx = templ.InitializeContext(ctx)
 				if len(props.PendingRequests) == 0 {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<p class=\"text-gray-500\">No sent requests</p>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<p class=\"text-gray-500\">No incoming requests</p>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				} else {
 					for _, request := range props.PendingRequests {
+						templ_7745c5c3_Err = IncomingRequestItem(request).Render(ctx, templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+					}
+				}
+				return nil
+			})
+			templ_7745c5c3_Err = CardContainer("Incoming Requests").Render(templ.WithChildren(ctx, templ_7745c5c3_Var12), templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div id=\"sent-requests-container\" hx-get=\"/friends/requests\" hx-trigger=\"request-sent from:body\" hx-swap=\"outerHTML\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Var13 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+				templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+				templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+				if !templ_7745c5c3_IsBuffer {
+					defer func() {
+						templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+						if templ_7745c5c3_Err == nil {
+							templ_7745c5c3_Err = templ_7745c5c3_BufErr
+						}
+					}()
+				}
+				ctx = templ.InitializeContext(ctx)
+				if len(props.SentRequests) == 0 {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<p class=\"text-gray-500\">No sent requests</p>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else {
+					for _, request := range props.SentRequests {
 						templ_7745c5c3_Err = SentRequestItem(request).Render(ctx, templ_7745c5c3_Buffer)
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
@@ -333,17 +370,17 @@ func Friends(props FriendsProps) templ.Component {
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = CardContainer("Sent Requests").Render(templ.WithChildren(ctx, templ_7745c5c3_Var12), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = CardContainer("Sent Requests").Render(templ.WithChildren(ctx, templ_7745c5c3_Var13), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = layout.Base("Friends").Render(templ.WithChildren(ctx, templ_7745c5c3_Var9), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = layout.Base("Friends").Render(templ.WithChildren(ctx, templ_7745c5c3_Var10), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

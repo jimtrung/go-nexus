@@ -6,5 +6,6 @@ CREATE TABLE IF NOT EXISTS friends (
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sender_id) REFERENCES users(user_id),
-    FOREIGN KEY (receiver_id) REFERENCES users(user_id)
+    FOREIGN KEY (receiver_id) REFERENCES users(user_id),
+    UNIQUE (sender_id, receiver_id)
 );
